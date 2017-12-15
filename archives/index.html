@@ -165,13 +165,6 @@
         <div class="archive-year-wrap">
           <a href="/archives/2017" class="archive-year">2017</a>
         </div>
-		
-		{% if theme.canvas_nest %}
-  
-
-<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
-{% endif %}
-
         <div class="archives">
     
     <article class="archive-article archive-type-post">
@@ -463,6 +456,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     </div>
 
 </div>
+	{% if theme.canvas_nest %}
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+{% endif %}
+
   </div>
 </body>
 </html>
