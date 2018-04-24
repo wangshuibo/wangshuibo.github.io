@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>git提交基本命令 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
+  <meta name="description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
 <meta name="keywords" content="git命令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git提交基本命令">
 <meta property="og:url" content="http://yoursite.com/2018/04/24/gitStyle/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
+<meta property="og:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-24T08:50:01.335Z">
+<meta property="og:updated_time" content="2018-04-24T08:52:55.213Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git提交基本命令">
-<meta name="twitter:description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
+<meta name="twitter:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -187,7 +187,7 @@
 	<div id="toc-article" class="toc-article">
 	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
 		<strong class="toc-title">文章目录</strong>
-          
+         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git提交基本命令"><span class="toc-text"><a href="#git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;" class="headerlink" title="git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;:"></a>git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git的三层结构"><span class="toc-text"><a href="#git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;" class="headerlink" title="git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;"></a>git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git中文件四种状态"><span class="toc-text"><a href="#git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;" class="headerlink" title="git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;"></a>git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git撤销操作"><span class="toc-text"><a href="#git&#x64A4;&#x9500;&#x64CD;&#x4F5C;" class="headerlink" title="git&#x64A4;&#x9500;&#x64CD;&#x4F5C;"></a>git&#x64A4;&#x9500;&#x64CD;&#x4F5C;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git分支"><span class="toc-text"><a href="#git&#x5206;&#x652F;" class="headerlink" title="git&#x5206;&#x652F;"></a>git&#x5206;&#x652F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git帮助文档的使用"><span class="toc-text"><a href="#Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;" class="headerlink" title="Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;"></a>Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;</span></a></li></ol> 
          </div>
    <script type="text/javascript">
 	function showToc(){
@@ -207,12 +207,31 @@
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        <p>git提交基本命令:<br>     1.ls -a 表示使用lunix命令查看文件夹下的文件。<br>     2.git init 表示初始化一个空的git仓库。<br>     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。<br>     4.git add 文件名 表示添加到暂存区，追踪。<br>     5.git commit -m ‘可以添加描述’ 表示提交文件。<br>     6.git log 表示查看提交信息。<br>     7.git add . 表示可以添加全部文件。<br>     8.git commit -am ‘可以添加描述’ 表示添加并提交文件。<br>     9.git log –oneline 表示只查看描述信息。<br> git的三层结构<br>     1.working directory 工作区<br>     2.staging index 暂存区<br>     3.git directory(Repository)版本库</p>
-<p> git中文件四种状态<br>     1.untracked:未追踪<br>     2.Modified:表示工作区修改了某个文件但是还没有添加到暂存区<br>     3.Stage:表示把工作区修改的文件添加到暂存区但是没有提交到版本库<br>     4.Committed:表示数据被安全的存储在本地仓库中</p>
-<p> git撤销操作<br>     1.git commit –amend 撤销上一次提交，并将暂存区的文件重新提交。(注意跳出是先按Esc，然后输入输入:wq再按Enter键)<br>     2.git checkout – filename 拉取暂存区的文件并将其替换工作区的文件，注意与git checkout branchname区别<br>     3.git reset HEAD – filename 拉取最近一次提交的版本库中的这个文件到暂存区，该操作不影响工作区。(可以在git log 中选择其中的一个版本号替换HEAD,这么做可以拉回上一次提交的样式。具体写法git reset 选择想要替换回来的一次版本号 filename )<br>     4.git reset –options 版本号{options可以替换–hard<br>                                                 –mixed<br>                                                 –soft<br>                                  }</p>
-<p> git文件删除<br>     1.git rm –filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add<br>                          2.git rm –cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)<br>                          3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)<br>                          4.glob模式–星号(*)匹配零个或多个任意字符<br>                                    –[abc] 匹配任何一个列在方括号中的字符–问号(?)只匹配一个任意字符<br>                                    –[0-9]、[a-z]匹配范围<br>                         }<br>     2.git mv –filename 相当于 {1.mv oldname newname<br>                                 2.git rm oldname<br>                                 3.git add newname<br>                                 }</p>
-<p> git分支</p>
-<pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
+        <h2 id="git提交基本命令"><a href="#git提交基本命令" class="headerlink" title="git提交基本命令:"></a>git提交基本命令:</h2><pre><code>1.ls -a 表示使用lunix命令查看文件夹下的文件。
+2.git init 表示初始化一个空的git仓库。
+3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。
+4.git add 文件名 表示添加到暂存区，追踪。
+5.git commit -m &apos;可以添加描述&apos; 表示提交文件。
+6.git log 表示查看提交信息。
+7.git add . 表示可以添加全部文件。
+8.git commit -am &apos;可以添加描述&apos; 表示添加并提交文件。
+9.git log --oneline 表示只查看描述信息。
+</code></pre><h2 id="git的三层结构"><a href="#git的三层结构" class="headerlink" title="git的三层结构"></a>git的三层结构</h2><pre><code>1.working directory 工作区
+2.staging index 暂存区
+3.git directory(Repository)版本库
+</code></pre><h2 id="git中文件四种状态"><a href="#git中文件四种状态" class="headerlink" title="git中文件四种状态"></a>git中文件四种状态</h2><pre><code>1.untracked:未追踪  
+2.Modified:表示工作区修改了某个文件但是还没有添加到暂存区
+3.Stage:表示把工作区修改的文件添加到暂存区但是没有提交到版本库
+4.Committed:表示数据被安全的存储在本地仓库中
+</code></pre><h2 id="git撤销操作"><a href="#git撤销操作" class="headerlink" title="git撤销操作"></a>git撤销操作</h2><pre><code>1.git commit --amend 撤销上一次提交，并将暂存区的文件重新提交。(注意跳出是先按Esc，然后输入输入:wq再按Enter键)
+2.git checkout -- filename 拉取暂存区的文件并将其替换工作区的文件，注意与git checkout branchname区别
+3.git reset HEAD -- filename 拉取最近一次提交的版本库中的这个文件到暂存区，该操作不影响工作区。(可以在git log 中选择其中的一个版本号替换HEAD,这么做可以拉回上一次提交的样式。具体写法git reset 选择想要替换回来的一次版本号 filename )
+4.git reset --options 版本号{options可以替换--hard
+                                            --mixed
+                                            --soft
+                             }
+</code></pre><p> ##git文件删除<br>     1.git rm –filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add<br>                          2.git rm –cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)<br>                          3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)<br>                          4.glob模式–星号(*)匹配零个或多个任意字符<br>                                    –[abc] 匹配任何一个列在方括号中的字符–问号(?)只匹配一个任意字符<br>                                    –[0-9]、[a-z]匹配范围<br>                         }<br>     2.git mv –filename 相当于 {1.mv oldname newname<br>                                 2.git rm oldname<br>                                 3.git add newname<br>                                 }</p>
+<h2 id="git分支"><a href="#git分支" class="headerlink" title="git分支"></a>git分支</h2><pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
                               2.git branch branchname创建分支
                               3.git branch -m oldname newname 修改分支名称
                               4.git checkout [-b] branchname 如果加上-b命令的意思是创建该分支并且切换分支,反之只是切换分支
@@ -233,7 +252,7 @@
         3-2.git stash list
         3-3.git stash apply stash@num    git stash apply 后面不加名字则应用最近一次存储信息
         3-4.git stash drop stash@num     git stash apply 只是运用存储信息，并不删除他，drop命令可以删除它
-</code></pre><p>git 远程仓库</p>
+</code></pre><p>##git 远程仓库</p>
 <pre><code>1.github上的仓库{1.创建仓库
                  2.clone仓库到本地
                  3.本地push到仓库
@@ -253,8 +272,7 @@
                   3.如果不是自己的服务器可以将本地公钥发给服务器管理员添加在authorized_keys文件后面
                   4.
                  }
-</code></pre><p>Git帮助文档的使用</p>
-<pre><code>1.git help 
+</code></pre><h2 id="Git帮助文档的使用"><a href="#Git帮助文档的使用" class="headerlink" title="Git帮助文档的使用"></a>Git帮助文档的使用</h2><pre><code>1.git help 
 2.git help command 
 3.官方地址---http://git-scm.com/docs
 
