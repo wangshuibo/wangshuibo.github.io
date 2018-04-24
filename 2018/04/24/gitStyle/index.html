@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>gitStyle | 涂白的记忆博客</title>
+  <title>git提交基本命令 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="gitStyle">
+  <meta name="description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
+<meta name="keywords" content="git命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git提交基本命令">
 <meta property="og:url" content="http://yoursite.com/2018/04/24/gitStyle/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
+<meta property="og:description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-24T08:03:56.950Z">
+<meta property="og:updated_time" content="2018-04-24T08:50:01.335Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="gitStyle">
+<meta name="twitter:title" content="git提交基本命令">
+<meta name="twitter:description" content="git提交基本命令:     1.ls -a 表示使用lunix命令查看文件夹下的文件。     2.git init 表示初始化一个空的git仓库。     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。     4.git add 文件名 表示添加到暂存区，追踪。     5.git commit -m ‘可以添加描述’ 表示提交文件。">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -163,23 +167,99 @@
         
   
     <h1 class="article-title" itemprop="name">
-      gitStyle
+      git提交基本命令
     </h1>
   
 
         
         <a href="/2018/04/24/gitStyle/" class="archive-article-date">
-  	<time datetime="2018-04-24T08:03:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
+  	<time datetime="2018-04-24T08:03:56.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
 </a>
         
       </header>
     
 	<!-- 目录内容 -->
 
+    <p class="show-toc-btn" id="show-toc-btn" onclick="showToc();" style="display:none">
+          <span class="btn-bg"></span>
+          <span class="btn-text">文章导航</span>
+          </p>
+	<div id="toc-article" class="toc-article">
+	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
+		<strong class="toc-title">文章目录</strong>
+          
+         </div>
+   <script type="text/javascript">
+	function showToc(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:block");
+		show_toc_btn.setAttribute("style","display:none");
+		};
+	function showBtn(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:none");
+		show_toc_btn.setAttribute("style","display:block");
+		};
+   </script>
+      
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>git提交基本命令:<br>     1.ls -a 表示使用lunix命令查看文件夹下的文件。<br>     2.git init 表示初始化一个空的git仓库。<br>     3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。<br>     4.git add 文件名 表示添加到暂存区，追踪。<br>     5.git commit -m ‘可以添加描述’ 表示提交文件。<br>     6.git log 表示查看提交信息。<br>     7.git add . 表示可以添加全部文件。<br>     8.git commit -am ‘可以添加描述’ 表示添加并提交文件。<br>     9.git log –oneline 表示只查看描述信息。<br> git的三层结构<br>     1.working directory 工作区<br>     2.staging index 暂存区<br>     3.git directory(Repository)版本库</p>
+<p> git中文件四种状态<br>     1.untracked:未追踪<br>     2.Modified:表示工作区修改了某个文件但是还没有添加到暂存区<br>     3.Stage:表示把工作区修改的文件添加到暂存区但是没有提交到版本库<br>     4.Committed:表示数据被安全的存储在本地仓库中</p>
+<p> git撤销操作<br>     1.git commit –amend 撤销上一次提交，并将暂存区的文件重新提交。(注意跳出是先按Esc，然后输入输入:wq再按Enter键)<br>     2.git checkout – filename 拉取暂存区的文件并将其替换工作区的文件，注意与git checkout branchname区别<br>     3.git reset HEAD – filename 拉取最近一次提交的版本库中的这个文件到暂存区，该操作不影响工作区。(可以在git log 中选择其中的一个版本号替换HEAD,这么做可以拉回上一次提交的样式。具体写法git reset 选择想要替换回来的一次版本号 filename )<br>     4.git reset –options 版本号{options可以替换–hard<br>                                                 –mixed<br>                                                 –soft<br>                                  }</p>
+<p> git文件删除<br>     1.git rm –filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add<br>                          2.git rm –cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)<br>                          3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)<br>                          4.glob模式–星号(*)匹配零个或多个任意字符<br>                                    –[abc] 匹配任何一个列在方括号中的字符–问号(?)只匹配一个任意字符<br>                                    –[0-9]、[a-z]匹配范围<br>                         }<br>     2.git mv –filename 相当于 {1.mv oldname newname<br>                                 2.git rm oldname<br>                                 3.git add newname<br>                                 }</p>
+<p> git分支</p>
+<pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
+                              2.git branch branchname创建分支
+                              3.git branch -m oldname newname 修改分支名称
+                              4.git checkout [-b] branchname 如果加上-b命令的意思是创建该分支并且切换分支,反之只是切换分支
+                              5.git branch -D  branchname删除分支
+                              }
+
+
+2. git 分支合并    
+        2-1.分值的指南--HEAD指向当前工作的分支--再切换分支时指向新的分支
+        2-2.git diff{1.git diff 比较工作区与暂存区文件的差异
+                     2.git diff --staged 比较暂存区与版本库的文件差异
+                     3.git diff 版本号 版本号 比较分支内两个版本的差异
+                     4.git diff 分支 分支 比较两个分支的最新提交版本的差异
+                    }
+        2-3.git merge branchname 合并之前需要先切换到master分支--快速合并和冲突合并
+3.存储变更
+        3-1.git stash
+        3-2.git stash list
+        3-3.git stash apply stash@num    git stash apply 后面不加名字则应用最近一次存储信息
+        3-4.git stash drop stash@num     git stash apply 只是运用存储信息，并不删除他，drop命令可以删除它
+</code></pre><p>git 远程仓库</p>
+<pre><code>1.github上的仓库{1.创建仓库
+                 2.clone仓库到本地
+                 3.本地push到仓库
+                 4.pull代码到本地
+                 5.ignoring files
+                 }   
+2.远程服务器上的仓库{1.用taskmanager来演示
+                     2.git init --bare
+                     3.git remote add name path
+                     4.git remote rm name
+                     5.git remote  rename oldname newname
+                     6.git fetch
+                    }   
+
+3.Git ssh免密登录{1.ssh-keygen
+                  2.ssh-copy-id user@host 将本机的公钥复制到远程服务器的authorized_keys文件中
+                  3.如果不是自己的服务器可以将本地公钥发给服务器管理员添加在authorized_keys文件后面
+                  4.
+                 }
+</code></pre><p>Git帮助文档的使用</p>
+<pre><code>1.git help 
+2.git help command 
+3.官方地址---http://git-scm.com/docs
+
+http://www.wangshuibo.github.io
+</code></pre>
       
 
       
@@ -218,6 +298,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">git命令</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -408,6 +499,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
