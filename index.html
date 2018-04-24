@@ -203,8 +203,19 @@
                                             --mixed
                                             --soft
                              }
-</code></pre><p> ##git文件删除<br>     1.git rm –filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add<br>                          2.git rm –cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)<br>                          3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)<br>                          4.glob模式–星号(*)匹配零个或多个任意字符<br>                                    –[abc] 匹配任何一个列在方括号中的字符–问号(?)只匹配一个任意字符<br>                                    –[0-9]、[a-z]匹配范围<br>                         }<br>     2.git mv –filename 相当于 {1.mv oldname newname<br>                                 2.git rm oldname<br>                                 3.git add newname<br>                                 }</p>
-<h2 id="git分支"><a href="#git分支" class="headerlink" title="git分支"></a>git分支</h2><pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
+</code></pre><p>##git文件删除</p>
+<pre><code>1.git rm --filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add
+                     2.git rm --cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)
+                     3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)
+                     4.glob模式--星号(*)匹配零个或多个任意字符
+                               --[abc] 匹配任何一个列在方括号中的字符--问号(?)只匹配一个任意字符
+                               --[0-9]、[a-z]匹配范围
+                    }
+2.git mv --filename 相当于 {1.mv oldname newname
+                            2.git rm oldname
+                            3.git add newname 
+                            }
+</code></pre><h2 id="git分支"><a href="#git分支" class="headerlink" title="git分支"></a>git分支</h2><pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
                               2.git branch branchname创建分支
                               3.git branch -m oldname newname 修改分支名称
                               4.git checkout [-b] branchname 如果加上-b命令的意思是创建该分支并且切换分支,反之只是切换分支
