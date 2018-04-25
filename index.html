@@ -203,8 +203,7 @@
                                             --mixed
                                             --soft
                              }
-</code></pre><p>##git文件删除</p>
-<pre><code>1.git rm --filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add
+</code></pre><h2 id="git文件删除"><a href="#git文件删除" class="headerlink" title="git文件删除"></a>git文件删除</h2><pre><code>1.git rm --filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add
                      2.git rm --cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)
                      3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)
                      4.glob模式--星号(*)匹配零个或多个任意字符
@@ -236,8 +235,7 @@
         3-2.git stash list
         3-3.git stash apply stash@num    git stash apply 后面不加名字则应用最近一次存储信息
         3-4.git stash drop stash@num     git stash apply 只是运用存储信息，并不删除他，drop命令可以删除它
-</code></pre><p>##git 远程仓库</p>
-<pre><code>1.github上的仓库{1.创建仓库
+</code></pre><h2 id="git-远程仓库"><a href="#git-远程仓库" class="headerlink" title="git 远程仓库"></a>git 远程仓库</h2><pre><code>1.github上的仓库{1.创建仓库
                  2.clone仓库到本地
                  3.本地push到仓库
                  4.pull代码到本地
