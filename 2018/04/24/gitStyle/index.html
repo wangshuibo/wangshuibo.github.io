@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="涂白的记忆博客">
 <meta property="og:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-25T05:21:27.131Z">
+<meta property="og:updated_time" content="2018-04-27T12:46:35.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git提交基本命令">
 <meta name="twitter:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
@@ -276,7 +276,8 @@
                      6.git fetch
                     }   
 
-3.Git ssh免密登录{1.ssh-keygen
+3.Git ssh免密登录{1.首先要配置username和邮箱 git config --global user.name yinlijun   git config user.email aaa@aaa.com如果配置了就不要配置
+                   ssh-keygen -t rsa -C &quot;youremail@example.com&quot;
                   2.ssh-copy-id user@host 将本机的公钥复制到远程服务器的authorized_keys文件中
                   3.如果不是自己的服务器可以将本地公钥发给服务器管理员添加在authorized_keys文件后面
                   4.
@@ -399,6 +400,15 @@ http://www.wangshuibo.github.io
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/04/25/MisWang/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          MisWang
+        
+      </div>
+    </a>
   
   
     <a href="/2017/12/10/px/" id="article-nav-older" class="article-nav-link-wrap">
@@ -530,6 +540,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">true</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">git命令</a>
