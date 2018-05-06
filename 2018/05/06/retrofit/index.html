@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/imgs/huangfangping.jpg">
 <meta property="og:image" content="/assets/retrofit_img/retrofit_flow_chart.png">
-<meta property="og:updated_time" content="2018-05-06T08:44:57.569Z">
+<meta property="og:updated_time" content="2018-05-06T09:21:54.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码分析">
 <meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程:">
@@ -337,15 +337,24 @@
   
 
   
-  <div id="SOHUCS" sid="retrofit" ></div> 
-<script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js" ></script>
-<script type="text/javascript">
-    window.changyan.api.config({
-        appid: "cytBitWYk",
-        conf: "4771d374265554ec14779defc127030e"
-    });
-</script>
-</script>
+  <section id="comments">
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS" sid="retrofit源码分析"  style="padding: 0px 30px 0px 46px;"></div>
+<script>
+  (function(){
+    var appid = 'cytBitWYk',
+    conf = 'prod_a685df54e7e03715d3c4b607cc00db0f';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script>    
+  </section>
   
 
   
@@ -381,7 +390,7 @@
 		toc_hide_index: true,
 		root: "/",
 		innerArchive: true,
-		showTags: true
+		showTags: false
 	}
 </script>
 
@@ -443,11 +452,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">排序</a>
+                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
+                <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
