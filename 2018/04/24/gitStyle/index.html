@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>git提交基本命令 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
+  <meta name="description" content="基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示查看提交信">
 <meta name="keywords" content="git命令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git提交基本命令">
 <meta property="og:url" content="http://yoursite.com/2018/04/24/gitStyle/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
+<meta property="og:description" content="基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示查看提交信">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-27T12:46:35.485Z">
+<meta property="og:updated_time" content="2018-05-06T04:24:14.041Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git提交基本命令">
-<meta name="twitter:description" content="git提交基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示">
+<meta name="twitter:description" content="基本命令:1.ls -a 表示使用lunix命令查看文件夹下的文件。 2.git init 表示初始化一个空的git仓库。 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。 4.git add 文件名 表示添加到暂存区，追踪。 5.git commit -m &amp;apos;可以添加描述&amp;apos; 表示提交文件。 6.git log 表示查看提交信">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -187,7 +187,7 @@
 	<div id="toc-article" class="toc-article">
 	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
 		<strong class="toc-title">文章目录</strong>
-         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git提交基本命令"><span class="toc-text"><a href="#git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;" class="headerlink" title="git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;:"></a>git&#x63D0;&#x4EA4;&#x57FA;&#x672C;&#x547D;&#x4EE4;:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git的三层结构"><span class="toc-text"><a href="#git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;" class="headerlink" title="git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;"></a>git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git中文件四种状态"><span class="toc-text"><a href="#git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;" class="headerlink" title="git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;"></a>git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git撤销操作"><span class="toc-text"><a href="#git&#x64A4;&#x9500;&#x64CD;&#x4F5C;" class="headerlink" title="git&#x64A4;&#x9500;&#x64CD;&#x4F5C;"></a>git&#x64A4;&#x9500;&#x64CD;&#x4F5C;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git文件删除"><span class="toc-text"><a href="#git&#x6587;&#x4EF6;&#x5220;&#x9664;" class="headerlink" title="git&#x6587;&#x4EF6;&#x5220;&#x9664;"></a>git&#x6587;&#x4EF6;&#x5220;&#x9664;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git分支"><span class="toc-text"><a href="#git&#x5206;&#x652F;" class="headerlink" title="git&#x5206;&#x652F;"></a>git&#x5206;&#x652F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-远程仓库"><span class="toc-text"><a href="#git-&#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;" class="headerlink" title="git &#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;"></a>git &#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git帮助文档的使用"><span class="toc-text"><a href="#Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;" class="headerlink" title="Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;"></a>Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;</span></a></li></ol> 
+         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本命令"><span class="toc-text"><a href="#&#x57FA;&#x672C;&#x547D;&#x4EE4;" class="headerlink" title="&#x57FA;&#x672C;&#x547D;&#x4EE4;:"></a>&#x57FA;&#x672C;&#x547D;&#x4EE4;:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git的三层结构"><span class="toc-text"><a href="#git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;" class="headerlink" title="git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;"></a>git&#x7684;&#x4E09;&#x5C42;&#x7ED3;&#x6784;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git中文件四种状态"><span class="toc-text"><a href="#git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;" class="headerlink" title="git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;"></a>git&#x4E2D;&#x6587;&#x4EF6;&#x56DB;&#x79CD;&#x72B6;&#x6001;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git撤销操作"><span class="toc-text"><a href="#git&#x64A4;&#x9500;&#x64CD;&#x4F5C;" class="headerlink" title="git&#x64A4;&#x9500;&#x64CD;&#x4F5C;"></a>git&#x64A4;&#x9500;&#x64CD;&#x4F5C;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git文件删除"><span class="toc-text"><a href="#git&#x6587;&#x4EF6;&#x5220;&#x9664;" class="headerlink" title="git&#x6587;&#x4EF6;&#x5220;&#x9664;"></a>git&#x6587;&#x4EF6;&#x5220;&#x9664;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git分支"><span class="toc-text"><a href="#git&#x5206;&#x652F;" class="headerlink" title="git&#x5206;&#x652F;"></a>git&#x5206;&#x652F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-远程仓库"><span class="toc-text"><a href="#git-&#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;" class="headerlink" title="git &#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;"></a>git &#x8FDC;&#x7A0B;&#x4ED3;&#x5E93;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git帮助文档的使用"><span class="toc-text"><a href="#Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;" class="headerlink" title="Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;"></a>Git&#x5E2E;&#x52A9;&#x6587;&#x6863;&#x7684;&#x4F7F;&#x7528;</span></a></li></ol> 
          </div>
    <script type="text/javascript">
 	function showToc(){
@@ -207,7 +207,7 @@
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="git提交基本命令"><a href="#git提交基本命令" class="headerlink" title="git提交基本命令:"></a>git提交基本命令:</h2><pre><code>1.ls -a 表示使用lunix命令查看文件夹下的文件。
+        <h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令:"></a>基本命令:</h2><pre><code>1.ls -a 表示使用lunix命令查看文件夹下的文件。
 2.git init 表示初始化一个空的git仓库。
 3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。
 4.git add 文件名 表示添加到暂存区，追踪。
@@ -542,11 +542,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
+                <a href="javascript:void(0)" class="js-tag color3">retrofit源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">retrofit源码分析</a>
+                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
               </li>
              
               <li class="article-tag-list-item">
