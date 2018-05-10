@@ -268,10 +268,10 @@ Retrofit retrofit = new Retrofit.Builder()
 <li>}<br><em>/<br>T adapt(Call<r> call);<br>/**
 </r></em>Creates {@link CallAdapter} instances based on the return type of {@linkplain<br><em>Retrofit#create(Class) the service interface} methods.
 </em>/<pre><code>···
-</code></pre>}<br>举例：<code><pre>new Retrofit.Builder()<pre><code>.baseUrl(&quot;https://wangshuipo.top/&quot;)      
+</code></pre>}<br>举例： new Retrofit.Builder()<pre><code>.baseUrl(&quot;https://wangshuipo.top/&quot;)      
 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 .build();
-</code></pre></pre></code><br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:<br><pre><code><br>public interface GitHubService {<br>@GET(“users/{user}/repos”)<br>Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<beasebean>)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</beasebean></t></t></li>
+</code></pre>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:<br><pre><code><br>public interface GitHubService {<br>@GET(“users/{user}/repos”)<br>Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<beasebean>)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</beasebean></t></t></li>
 </ul>
 </li>
 </ul>
