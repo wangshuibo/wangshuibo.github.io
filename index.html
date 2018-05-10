@@ -210,36 +210,11 @@ public static final class Builder {
     private boolean validateEagerly;
     ···
 </code></pre><p>}<br><br>从Retrofit.Builder的注释中，我们可以看到，在调用Retrofit.Builder.build()之前，除了baseUrl()是必须配置的以外，其他的内容都是可选配置。<br>这里要对两个类型做下讲解，因为笔者在刚分析Retrofit源码时，被这两个类型的概念弄得头晕眼胀，好在一顿分析后，终于有了一点眉目，这两个类型就是：Converter<f, t="">和CallAdapter<r, t="">。<br>Converter<f, t="">：数据转换器，用来将HTTP请求返回结果由F类型转换为T类型，或者将HTTP请求类型F转换为T</f,></r,></f,></p>
-<p><pre><code><br>public interface Converter<f, t=""> {<br>  T convert(F value) throws IOException;<br>}//举例：<br>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addConverterFactory(GsonConverterFactory.create())<br>                .build();<br></f,></code></pre><br>上面配置了ConverterFactory为GsonConverterFactory，那么当HTTP请求结果返回时，就会由GsonConverterFactory产生的Converter，假设为Converter<responsebody, list<repo="">&gt;,该Converter就会将HTTP返回结果ResponseBody转换为 List<repo>。<br>而若是将对象转换为数据，那么假设类型为:Converter&lt; List<repo>, RequestBody&gt;,该Converter在构建请求体时，会将List<repo>转换为RequestBody对象。</repo></repo></repo></responsebody,></p>
+<p><pre><code><br>public interface Converter<f, t=""> {<br>  T convert(F value) throws IOException;<br>          ···<br>}<br>//举例：<br>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addConverterFactory(GsonConverterFactory.create())<br>                .build();<br></f,></code></pre><br>上面配置了ConverterFactory为GsonConverterFactory，那么当HTTP请求结果返回时，就会由GsonConverterFactory产生的Converter，假设为Converter<responsebody, list<repo="">&gt;,该Converter就会将HTTP返回结果ResponseBody转换为 List<repo>。<br>而若是将对象转换为数据，那么假设类型为:Converter&lt; List<repo>, RequestBody&gt;,该Converter在构建请求体时，会将List<repo>转换为RequestBody对象。</repo></repo></repo></responsebody,></p>
 <p>CallAdapter<r, t="">：请求适配器，用于将retrofit2.Call<r>网络请求类型转换为T类型</r></r,></p>
-<p><pre><code><br>public interface CallAdapter<r, t=""> {<br>  /**</r,></code></pre></p>
-<ul>
-<li>Returns the value type that this adapter uses when converting the HTTP response body to a Java</li>
-<li>object. For example, the response type for {@code Call<repo>} is {@code * Repo}. This type</repo></li>
-<li>is used to prepare the {@code call} passed to {@code #adapt}.</li>
-<li>Note: This is typically not the same type as the {@code returnType} provided to this call</li>
-<li><p>adapter’s factory.<br>*/<br>Type responseType();</p>
-<p>/**</p>
-</li>
-<li>Returns an instance of {@code T} which delegates to {@code call}.</li>
-<li>For example, given an instance for a hypothetical utility, {@code Async}, this instance would</li>
-<li>return a new {@code Async<r>} which invoked {@code call} when run.</r></li>
-<li>@Override</li>
-<li>public <r> Async<r> adapt(final Call<r> call) {</r></r></r></li>
-<li>return Async.create(new Callable<response<r>&gt;() {</response<r></li>
-<li>@Override</li>
-<li>public Response<r> call() throws Exception {</r></li>
-<li>return call.execute();</li>
-<li>}</li>
-<li>});</li>
-<li>}<br><em>/<br>T adapt(Call<r> call);<br>/**
-</r></em>Creates {@link CallAdapter} instances based on the return type of {@linkplain<br><em>Retrofit#create(Class) the service interface} methods.
-</em>/<pre><code>···
-</code></pre>}<br>举例： new Retrofit.Builder()<pre><code>.baseUrl(&quot;https://wangshuipo.top/&quot;)      
-.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-.build();
-</code></pre>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:<br><pre><code><br>public interface GitHubService {<br>@GET(“users/{user}/repos”)<br>Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<beasebean>)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</beasebean></t></t></li>
-</ul>
+<p><pre><code><br>public interface CallAdapter<r, t=""> {<br>   Type responseType();</r,></code></pre></p>
+<p>   T adapt(Call<r> call);<br>               ···<br>}<br>举例： new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>                .build();<br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:</t></t></r></p>
+<p><pre><code><br>public interface GitHubService {<br>    @GET(“users/{user}/repos”)<br>    Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<beasebean>)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</beasebean></p>
 <p>上面讲了那么多的东西，可是还是没有讲到Retrofit实例的创建，别着急，在查看Retrofit.Builder.build()方法前，我们还要看下Builder的构造函数:</p>
 <p> <pre><code><br>        Builder(Platform platform) {<br>            this.platform = platform;<br>            // Add the built-in converter factory first. This prevents overriding its behavior but also<br>            // ensures correct behavior when using converters that consume all types.<br>            converterFactories.add(new BuiltInConverters());<br>        }</code></pre></p>
 <pre><code>public Builder() {
@@ -275,24 +250,8 @@ public static final class Builder {
 }
 </code></pre><p>  }<br><br>可以看到，如果是RequestBody类型，那就不转换，如果不是RequestBody类型，直接返回null。</p>
 <p>综上所述:BuiltInConverters只能响应ResponseBody和RequestBody，但是并不进行任何转换.对于其他类型，统统返回null。</p>
-<p>到这里，终于可以走进Retrofit.Builder.build()函数，一窥究竟：</p>
-<pre><code>&lt;pre&gt;&lt;code&gt;/**
- * Create the {@link Retrofit} instance using the configured values.
- * Note: If neither {@link #client} nor {@link #callFactory} is called a default {@link
- * OkHttpClient} will be created and used.
- */
-public Retrofit build() {
-    if (baseUrl == null) {
-        throw new IllegalStateException(&quot;Base URL required.&quot;);
-    }
-
-    okhttp3.Call.Factory callFactory = this.callFactory;
-    if (callFactory == null) {
-        //callFactory默认为OkHttpClient
-        callFactory = new OkHttpClient();
-    }
-
-    Executor callbackExecutor = this.callbackExecutor;
+<p>到这里，终于可以走进Retrofit.Builder.build()函数，一窥究竟：<br>        <pre><code><br>        public Retrofit build() {<br>            if (baseUrl == null) {<br>                throw new IllegalStateException(“Base URL required.”);<br>            }<br>            okhttp3.Call.Factory callFactory = this.callFactory;<br>            if (callFactory == null) {<br>                //callFactory默认为OkHttpClient<br>                callFactory = new OkHttpClient();<br>            }</code></pre></p>
+<pre><code>    Executor callbackExecutor = this.callbackExecutor;
     if (callbackExecutor == null) {
         //默认的callbackExecutor为Platform.Android.MainThreadExecutor
         //MainThreadExecutor继承Executor,并复写execute(Runnable r),
@@ -312,8 +271,7 @@ public Retrofit build() {
     return new Retrofit(callFactory, baseUrl, converterFactories, adapterFactories,
             callbackExecutor, validateEagerly);
 }
-</code></pre><p>build函数一进去，就看到:</p>
-<p>if (baseUrl == null) {<br>                throw new IllegalStateException(“Base URL required.”);<br>            }<br><br>这说明baseUrl是一定要进行配置的，否则程序就会抛出异常，这跟我们上面讲到的一致。<br>接着往下看：</p>
+</code></pre><p>//build函数一进去，就看到:<br>if (baseUrl == null) {<br>                throw new IllegalStateException(“Base URL required.”);<br>            }<br><br>这说明baseUrl是一定要进行配置的，否则程序就会抛出异常，这跟我们上面讲到的一致。<br>接着往下看：</p>
 <p><pre><code><br>     okhttp3.Call.Factory callFactory = this.callFactory;<br>            if (callFactory == null) {<br>                //callFactory默认为OkHttpClient<br>                callFactory = new OkHttpClient();<br>            }</code></pre></p>
 <pre><code>Executor callbackExecutor = this.callbackExecutor;
 if (callbackExecutor == null) {
