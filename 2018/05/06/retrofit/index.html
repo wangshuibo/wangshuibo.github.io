@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/imgs/huangfangping.jpg">
 <meta property="og:image" content="/assets/retrofit_img/retrofit_flow_chart.png">
-<meta property="og:updated_time" content="2018-05-10T08:29:44.288Z">
+<meta property="og:updated_time" content="2018-05-10T08:35:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码分析">
 <meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程: 创建一个接口进行HTTP请求描述；使用Retrofit.Builder构建模式构造出一个Retrofit实例；调用retro">
@@ -233,31 +233,23 @@ Retrofit retrofit = new Retrofit.Builder()
 
 <p>从Retrofit.Builder的注释中，我们可以看到，在调用Retrofit.Builder.build()之前，除了baseUrl()是必须配置的以外，其他的内容都是可选配置。<br>这里要对两个类型做下讲解，因为笔者在刚分析Retrofit源码时，被这两个类型的概念弄得头晕眼胀，好在一顿分析后，终于有了一点眉目，这两个类型就是：Converter<f, t="">和CallAdapter<r, t="">。</r,></f,></p>
 <p>Converter<f, t="">：数据转换器，用来将HTTP请求返回结果由F类型转换为T类型，或者将HTTP请求类型F转换为T</f,></p>
-<p><pre><code><br>/**</code></pre></p>
-<ul>
-<li>Convert objects to and from their representation in HTTP. Instances are created by {@linkplain</li>
-<li>Factory a factory} which is {@linkplain Retrofit.Builder#addConverterFactory(Factory) installed}</li>
-<li>into the {@link Retrofit} instance.<br>*/<br>public interface Converter<f, t=""> {<br>T convert(F value) throws IOException;<pre><code>···
-</code></pre>}<br>举例：</f,></li>
-</ul>
+<p><pre><code><br>/<em>*
+ </em>Convert objects to and from their representation in HTTP. Instances are created by {@linkplain<br> <em>Factory a factory} which is {@linkplain Retrofit.Builder#addConverterFactory(Factory) installed}
+ </em>into the {@link Retrofit} instance.<br> */<br>public interface Converter<f, t=""> {<br>  T convert(F value) throws IOException;<br>          ···<br>}<br>举例：</f,></code></pre></p>
 <p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addConverterFactory(GsonConverterFactory.create())<br>                .build();<br><br>上面配置了ConverterFactory为GsonConverterFactory，那么当HTTP请求结果返回时，就会由GsonConverterFactory产生的Converter，假设为Converter<responsebody, list<repo="">&gt;,该Converter就会将HTTP返回结果ResponseBody转换为 List<repo>。<br>而若是将对象转换为数据，那么假设类型为:Converter&lt; List<repo>, RequestBody&gt;,该Converter在构建请求体时，会将List<repo>转换为RequestBody对象。</repo></repo></repo></responsebody,></p>
 <p>CallAdapter<r, t="">：请求适配器，用于将retrofit2.Call<r>网络请求类型转换为T类型</r></r,></p>
-<p><pre><code><br>/**</code></pre></p>
-<ul>
-<li>Adapts a {@link Call} with response type {@code R} into the type of {@code T}. Instances are</li>
-<li>created by {@linkplain Factory a factory} which is</li>
-<li>{@linkplain Retrofit.Builder#addCallAdapterFactory(Factory) installed} into the {@link Retrofit}</li>
-<li><p>instance.<br><em>/<br>public interface CallAdapter<r, t=""> {<br>/*</r,></em></p>
+<p><pre><code><br>/<strong><br> <em>Adapts a {@link Call} with response type {@code R} into the type of {@code T}. Instances are
+ </em>created by {@linkplain Factory a factory} which is<br> <em>{@linkplain Retrofit.Builder#addCallAdapterFactory(Factory) installed} into the {@link Retrofit}
+ </em>instance.<br> */<br>public interface CallAdapter<r, t=""> {<br>  /</r,></strong></code></pre></p>
 <ul>
 <li>Returns the value type that this adapter uses when converting the HTTP response body to a Java</li>
 <li>object. For example, the response type for {@code Call<repo>} is {@code Repo}. This type</repo></li>
 <li>is used to prepare the {@code call} passed to {@code #adapt}.</li>
 <li><p></p></li>
 <li>Note: This is typically not the same type as the {@code returnType} provided to this call</li>
-<li>adapter’s factory.<br>*/<br>Type responseType();</li>
-</ul>
+<li><p>adapter’s factory.<br>*/<br>Type responseType();</p>
 <p>/**</p>
-<ul>
+</li>
 <li>Returns an instance of {@code T} which delegates to {@code call}.</li>
 <li><p></p></li>
 <li>For example, given an instance for a hypothetical utility, {@code Async}, this instance would</li>
@@ -274,8 +266,6 @@ Retrofit retrofit = new Retrofit.Builder()
 <li>Creates {@link CallAdapter} instances based on the return type of {@linkplain</li>
 <li>Retrofit#create(Class) the service interface} methods.<br>*/<pre><code>···
 </code></pre>}<br>举例：</li>
-</ul>
-</li>
 </ul>
 <p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>                .build();<br><br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:</t></t></p>
 <p><pre><code><br>public interface GitHubService {<br>    @GET(“users/{user}/repos”)<br>    Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<list<repo>&gt;)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</list<repo></p>
