@@ -281,25 +281,17 @@ Retrofit retrofit = new Retrofit.Builder()
     this(Platform.get());
 }
 </code></pre><p>//当我们调用:<br>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top" target="_blank" rel="noopener">https://wangshuipo.top</a>“)<br>                .build();<br><br>就会走入:Builder()–&gt; Builder(Platform platform)<br>然后我们看到，在Builder(Platform platform)构造函数里面，会往converterFactories里面添加进一个BuiltInConverters对象，所以默认的ConverterFactory就是BuiltInConverters。前面说过ConverterFactory主要是用来将HTTP返回结果进行类型转换或者将HTTP请求体进行类型转换，然后我们看下BuiltInConverters是怎样的转换方式:</p>
-<p><pre><code><br>final class BuiltInConverters extends Converter.Factory {<br>  //返回结果转换<br>  @Override<br>  public Converter<responsebody, ?=""> responseBodyConverter(Type type, Annotation[] annotations,<br>      Retrofit retrofit) {<br>    if (type == ResponseBody.class) {<br>      //如果annotations是Streaming类型<br>      return Utils.isAnnotationPresent(annotations, Streaming.class)<br>          ? StreamingResponseBodyConverter.INSTANCE<br>          : BufferingResponseBodyConverter.INSTANCE;<br>    }<br>    if (type == Void.class) {<br>      return VoidResponseBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</responsebody,></code></pre></p>
-<p>  //请求转换<br>  @Override<br>  public Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type,<br>      Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {<br>    if (RequestBody.class.isAssignableFrom(Utils.getRawType(type))) {<br>      return RequestBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</p>
+<p><pre><code><br>final class BuiltInConverters extends Converter.Factory {<br>  //返回结果转换<br>  @Override<br>  public Converter<responsebody, ?=""> responseBodyConverter(Type type, Annotation[] annotations,<br>      Retrofit retrofit) {<br>    if (type == ResponseBody.class) {<br>      //如果annotations是Streaming类型<br>      return Utils.isAnnotationPresent(annotations, Streaming.class)<br>          ? StreamingResponseBodyConverter.INSTANCE<br>          : BufferingResponseBodyConverter.INSTANCE;<br>    }<br>    if (type == Void.class) {<br>      return VoidResponseBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }<br>  //请求转换<br>  @Override<br>  public Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type,<br>      Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {<br>    if (RequestBody.class.isAssignableFrom(Utils.getRawType(type))) {<br>      return RequestBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</responsebody,></code></pre></p>
 <p>  static final class VoidResponseBodyConverter implements Converter<responsebody, void=""> {<br>    static final VoidResponseBodyConverter INSTANCE = new VoidResponseBodyConverter();</responsebody,></p>
 <pre><code>@Override public Void convert(ResponseBody value) throws IOException {
   value.close();
   return null;
 }
-</code></pre><p>  }</p>
-<p>  static final class RequestBodyConverter implements Converter<requestbody, requestbody=""> {<br>    static final RequestBodyConverter INSTANCE = new RequestBodyConverter();</requestbody,></p>
+</code></pre><p>  }<br>  static final class RequestBodyConverter implements Converter<requestbody, requestbody=""> {<br>    static final RequestBodyConverter INSTANCE = new RequestBodyConverter();</requestbody,></p>
 <pre><code>@Override public RequestBody convert(RequestBody value) throws IOException {
   return value;
 }
-</code></pre><p>  }</p>
-<p>  static final class StreamingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final StreamingResponseBodyConverter INSTANCE = new StreamingResponseBodyConverter();</responsebody,></p>
-<pre><code>@Override public ResponseBody convert(ResponseBody value) throws IOException {
-  return value;
-}
-</code></pre><p>  }</p>
-<p>  static final class BufferingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final BufferingResponseBodyConverter INSTANCE = new BufferingResponseBodyConverter();</responsebody,></p>
+</code></pre><p>  }<br>  static final class StreamingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final StreamingResponseBodyConverter INSTANCE = new StreamingResponseBodyConverter();<br>    @Override public ResponseBody convert(ResponseBody value) throws IOException {<br>      return value;<br>    }<br>  }<br>  static final class BufferingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final BufferingResponseBodyConverter INSTANCE = new BufferingResponseBodyConverter();</responsebody,></responsebody,></p>
 <pre><code>@Override public ResponseBody convert(ResponseBody value) throws IOException {
   try {
     // Buffer the entire body to avoid future I/O.
@@ -308,12 +300,7 @@ Retrofit retrofit = new Retrofit.Builder()
     value.close();
   }
 }
-</code></pre><p>  }</p>
-<p>  static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();</object,></p>
-<pre><code>@Override public String convert(Object value) {
-  return value.toString();
-}
-</code></pre><p>  }<br>}<br><br>返回结果转换的时候，有3种情况:</p>
+</code></pre><p>  }<br>  static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();<br>    @Override public String convert(Object value) {<br>      return value.toString();<br>    }<br>  }<br>}<br><br>返回结果转换的时候，有3种情况:</object,></p>
 <p>如果返回类型是ResponseBody类型，那么可能返回的是:StreamingResponseBodyConverter.INSTANCE或者BufferingResponseBodyConverter.INSTANCE，再跟踪进去这两个类里面的convert函数:<br> @Override public ResponseBody convert(ResponseBody value){···}<br>发现传入的是ResponseBody，返回的也是ResponseBody（BufferingResponseBodyConverter里面有进行特殊处理，主要是为了去除future I/O），所以我们可以认为BuiltInConverters对HTTP返回结果没有进行转换处理。</p>
 <p>如果返回类型是Void类型，那么最终就将ResponseBody资源关闭后，直接返回null。<br>如果返回类型不是ResponseBody和Void类型，直接返回null。<br>同理，我们来看下请求体转换:</p>
 <p>//请求转换</p>
