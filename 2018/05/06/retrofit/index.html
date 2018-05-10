@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/imgs/huangfangping.jpg">
 <meta property="og:image" content="/assets/retrofit_img/retrofit_flow_chart.png">
-<meta property="og:updated_time" content="2018-05-10T08:56:29.062Z">
+<meta property="og:updated_time" content="2018-05-10T08:58:34.908Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码分析">
 <meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程:  1.创建一个接口进行HTTP请求描述；2.使用Retrofit.Builder构建模式构造出一个Retrofit实例；3.">
@@ -253,15 +253,14 @@ Retrofit retrofit = new Retrofit.Builder()
    </em>public Response<r> call() throws Exception {<br>   <em>return call.execute();
    </em>}<br>   <em>});
    </em>}<br>   */<br>  T adapt(Call<r> call);<br>  /</r></r></response<r></strong><br>   <em>Creates {@link CallAdapter} instances based on the return type of {@linkplain
-    </em>Retrofit#create(Class) the service interface} methods.<br>   */<br>              ···<br>}<br>举例：<br>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>                .build();<br><br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:</t></t></p>
+    </em>Retrofit#create(Class) the service interface} methods.<br>   */<br>              ···<br>}<br>举例：<code><pre>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>                .build();<br></pre></code><br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:</t></t></p>
 <p><pre><code><br>public interface GitHubService {<br>    @GET(“users/{user}/repos”)<br>    Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<list<repo>&gt;)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</list<repo></p>
 <p>上面讲了那么多的东西，可是还是没有讲到Retrofit实例的创建，别着急，在查看Retrofit.Builder.build()方法前，我们还要看下Builder的构造函数:</p>
 <p> <pre><code><br>        Builder(Platform platform) {<br>            this.platform = platform;<br>            // Add the built-in converter factory first. This prevents overriding its behavior but also<br>            // ensures correct behavior when using converters that consume all types.<br>            converterFactories.add(new BuiltInConverters());<br>        }</code></pre></p>
 <pre><code>public Builder() {
     this(Platform.get());
 }
-</code></pre><p>当我们调用:</p>
-<p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top" target="_blank" rel="noopener">https://wangshuipo.top</a>“)<br>                .build();<br><br>就会走入:Builder()–&gt; Builder(Platform platform)<br>然后我们看到，在Builder(Platform platform)构造函数里面，会往converterFactories里面添加进一个BuiltInConverters对象，所以默认的ConverterFactory就是BuiltInConverters。前面说过ConverterFactory主要是用来将HTTP返回结果进行类型转换或者将HTTP请求体进行类型转换，然后我们看下BuiltInConverters是怎样的转换方式:</p>
+</code></pre><p>//当我们调用:<br>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top" target="_blank" rel="noopener">https://wangshuipo.top</a>“)<br>                .build();<br><br>就会走入:Builder()–&gt; Builder(Platform platform)<br>然后我们看到，在Builder(Platform platform)构造函数里面，会往converterFactories里面添加进一个BuiltInConverters对象，所以默认的ConverterFactory就是BuiltInConverters。前面说过ConverterFactory主要是用来将HTTP返回结果进行类型转换或者将HTTP请求体进行类型转换，然后我们看下BuiltInConverters是怎样的转换方式:</p>
 <p><pre><code><br>final class BuiltInConverters extends Converter.Factory {<br>  //返回结果转换<br>  @Override<br>  public Converter<responsebody, ?=""> responseBodyConverter(Type type, Annotation[] annotations,<br>      Retrofit retrofit) {<br>    if (type == ResponseBody.class) {<br>      //如果annotations是Streaming类型<br>      return Utils.isAnnotationPresent(annotations, Streaming.class)<br>          ? StreamingResponseBodyConverter.INSTANCE<br>          : BufferingResponseBodyConverter.INSTANCE;<br>    }<br>    if (type == Void.class) {<br>      return VoidResponseBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</responsebody,></code></pre></p>
 <p>  //请求转换<br>  @Override<br>  public Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type,<br>      Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {<br>    if (RequestBody.class.isAssignableFrom(Utils.getRawType(type))) {<br>      return RequestBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</p>
 <p>  static final class VoidResponseBodyConverter implements Converter<responsebody, void=""> {<br>    static final VoidResponseBodyConverter INSTANCE = new VoidResponseBodyConverter();</responsebody,></p>
