@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="">
   <title>retrofit源码分析 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程:">
+  <meta name="description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程: 创建一个接口进行HTTP请求描述；使用Retrofit.Builder构建模式构造出一个Retrofit实例；调用retro">
 <meta name="keywords" content="retrofit源码分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="retrofit源码分析">
 <meta property="og:url" content="/2018/05/06/retrofit/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程:">
+<meta property="og:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程: 创建一个接口进行HTTP请求描述；使用Retrofit.Builder构建模式构造出一个Retrofit实例；调用retro">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/imgs/huangfangping.jpg">
 <meta property="og:image" content="/assets/retrofit_img/retrofit_flow_chart.png">
-<meta property="og:updated_time" content="2018-05-06T09:21:54.216Z">
+<meta property="og:updated_time" content="2018-05-10T08:29:44.288Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码分析">
-<meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程:">
+<meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607） 主体下面讲解一下主流程: 创建一个接口进行HTTP请求描述；使用Retrofit.Builder构建模式构造出一个Retrofit实例；调用retro">
 <meta name="twitter:image" content="/assets/imgs/huangfangping.jpg">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
@@ -189,6 +189,625 @@
         <h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a>导言</h2><p>retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。</p>
 <h2 id=""><a href="#" class="headerlink" title=""></a><img src="/assets/imgs/huangfangping.jpg" alt=""></h2><p>首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607）</p>
 <h2 id="-1"><a href="#-1" class="headerlink" title=""></a><img src="/assets/retrofit_img/retrofit_flow_chart.png" alt=""></h2><h2 id="主体"><a href="#主体" class="headerlink" title="主体"></a>主体</h2><p>下面讲解一下主流程:</p>
+<p>创建一个接口进行HTTP请求描述；<br>使用Retrofit.Builder构建模式构造出一个Retrofit实例；<br>调用retrofit.create()方法获取请求接口实例；<br>由请求接口实例获取到Call对象；<br>进行网络请求（同步/异步）<br>接下来，我们就按照以上正常的网络请求顺序来对Retrofit源码进行解析。</p>
+<p>创建一个接口进行HTTP请求描述</p>
+<pre><code>
+public interface ApiService {
+  @GET("users/{user}/gg")
+  Call<basebean> bean(@Path("user") String user);
+}</basebean></code></pre>
+这里主要做的就是采用注解的方式进行HTTP描述，后面在第4步由请求接口实例获取到Call对象时进行反射提取注解内容进行HTTP请求构造（如果开启了预先加载解析（validateEagerly=true），那么在第3步调用retrofit.create()方法获取请求接口实例的时候就会进行注解解析），具体解析方法参考后续分析。
+
+使用Retrofit.Builder构建模式构造出一个Retrofit实例
+<pre><code>
+Retrofit retrofit = new Retrofit.Builder()
+    .baseUrl("https://wangshuipo.top/")
+    .build();
+</code></pre>
+那我们就先来看下Retrofit.Builder部分源码:
+
+ <pre><code>
+  /**
+     * Build a new {@link Retrofit}.
+     * <p>
+     * Calling {@link #baseUrl} is required before calling {@link #build()}. All other methods
+     * are optional.
+     */
+    public static final class Builder {
+        private final Platform platform;
+        //callFactory通过newCall(Request request)方法，返回一个okhttp3.Call对象，以便让我们进行实际的HTTP请求
+        //也就是说callFactory是我们用来生成一个客户端HTTP请求工厂实例
+        private @Nullable okhttp3.Call.Factory callFactory;
+        private HttpUrl baseUrl;
+        //converterFactories生产Converter<f, t="">，用于将HTTP返回结果F类型转换为T类型，或将HTTP请求类型F转换为T。
+        private final List<converter.factory> converterFactories = new ArrayList<>();
+        //adapterFactories生产 CallAdapter<r, t="">，用于将retrofit2.Call<r>网络请求类型转换为T类型：T adapt(Call<r> var1);
+        private final List<calladapter.factory> adapterFactories = new ArrayList<>();
+        private @Nullable
+        Executor callbackExecutor;
+        private boolean validateEagerly;
+        ···
+
+}
+</calladapter.factory></r></r></r,></converter.factory></f,></p></code></pre>
+
+<p>从Retrofit.Builder的注释中，我们可以看到，在调用Retrofit.Builder.build()之前，除了baseUrl()是必须配置的以外，其他的内容都是可选配置。<br>这里要对两个类型做下讲解，因为笔者在刚分析Retrofit源码时，被这两个类型的概念弄得头晕眼胀，好在一顿分析后，终于有了一点眉目，这两个类型就是：Converter<f, t="">和CallAdapter<r, t="">。</r,></f,></p>
+<p>Converter<f, t="">：数据转换器，用来将HTTP请求返回结果由F类型转换为T类型，或者将HTTP请求类型F转换为T</f,></p>
+<p><pre><code><br>/**</code></pre></p>
+<ul>
+<li>Convert objects to and from their representation in HTTP. Instances are created by {@linkplain</li>
+<li>Factory a factory} which is {@linkplain Retrofit.Builder#addConverterFactory(Factory) installed}</li>
+<li>into the {@link Retrofit} instance.<br>*/<br>public interface Converter<f, t=""> {<br>T convert(F value) throws IOException;<pre><code>···
+</code></pre>}<br>举例：</f,></li>
+</ul>
+<p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addConverterFactory(GsonConverterFactory.create())<br>                .build();<br><br>上面配置了ConverterFactory为GsonConverterFactory，那么当HTTP请求结果返回时，就会由GsonConverterFactory产生的Converter，假设为Converter<responsebody, list<repo="">&gt;,该Converter就会将HTTP返回结果ResponseBody转换为 List<repo>。<br>而若是将对象转换为数据，那么假设类型为:Converter&lt; List<repo>, RequestBody&gt;,该Converter在构建请求体时，会将List<repo>转换为RequestBody对象。</repo></repo></repo></responsebody,></p>
+<p>CallAdapter<r, t="">：请求适配器，用于将retrofit2.Call<r>网络请求类型转换为T类型</r></r,></p>
+<p><pre><code><br>/**</code></pre></p>
+<ul>
+<li>Adapts a {@link Call} with response type {@code R} into the type of {@code T}. Instances are</li>
+<li>created by {@linkplain Factory a factory} which is</li>
+<li>{@linkplain Retrofit.Builder#addCallAdapterFactory(Factory) installed} into the {@link Retrofit}</li>
+<li><p>instance.<br><em>/<br>public interface CallAdapter<r, t=""> {<br>/*</r,></em></p>
+<ul>
+<li>Returns the value type that this adapter uses when converting the HTTP response body to a Java</li>
+<li>object. For example, the response type for {@code Call<repo>} is {@code Repo}. This type</repo></li>
+<li>is used to prepare the {@code call} passed to {@code #adapt}.</li>
+<li><p></p></li>
+<li>Note: This is typically not the same type as the {@code returnType} provided to this call</li>
+<li>adapter’s factory.<br>*/<br>Type responseType();</li>
+</ul>
+<p>/**</p>
+<ul>
+<li>Returns an instance of {@code T} which delegates to {@code call}.</li>
+<li><p></p></li>
+<li>For example, given an instance for a hypothetical utility, {@code Async}, this instance would</li>
+<li>return a new {@code Async<r>} which invoked {@code call} when run.</r></li>
+<li>@Override</li>
+<li>public <r> Async<r> adapt(final Call<r> call) {</r></r></r></li>
+<li>return Async.create(new Callable<response<r>&gt;() {</response<r></li>
+<li>@Override</li>
+<li>public Response<r> call() throws Exception {</r></li>
+<li>return call.execute();</li>
+<li>}</li>
+<li>});</li>
+<li>}<br><em>/<br>T adapt(Call<r> call);<br>/*</r></em></li>
+<li>Creates {@link CallAdapter} instances based on the return type of {@linkplain</li>
+<li>Retrofit#create(Class) the service interface} methods.<br>*/<pre><code>···
+</code></pre>}<br>举例：</li>
+</ul>
+</li>
+</ul>
+<p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top/" target="_blank" rel="noopener">https://wangshuipo.top/</a>“)<br>                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>                .build();<br><br>上面配置了CallAdapterFactory为RxJava2CallAdapterFactory，这里的作用就是将Retrofit2.Call<t>对象转换为Observable<t>类型，所以如果配置了RxJava2CallAdapterFactory，那么接口方法声明应该改为如下形式:</t></t></p>
+<p><pre><code><br>public interface GitHubService {<br>    @GET(“users/{user}/repos”)<br>    Observable<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>其实这个addCallAdapterFactory实现原理是挺简单的，因为Retrofit里面维护了CallAdapter.Factory一个数组，在使用Builder配置的时候，所有配置的CallAdapter.Factory最后都会保存到Retrofit那个数组中，后面在进行转换是，Retrofit会根据接口方法返回结果类型(此处为:Observable<list<repo>&gt;)，遍历CallAdapter.Factory数组，找到一个能处理该返回类型的CallAdapter后，就不再遍历。更多具体的解析方法请参考后续整体流程的介绍。</list<repo></p>
+<p>上面讲了那么多的东西，可是还是没有讲到Retrofit实例的创建，别着急，在查看Retrofit.Builder.build()方法前，我们还要看下Builder的构造函数:</p>
+<p> <pre><code><br>        Builder(Platform platform) {<br>            this.platform = platform;<br>            // Add the built-in converter factory first. This prevents overriding its behavior but also<br>            // ensures correct behavior when using converters that consume all types.<br>            converterFactories.add(new BuiltInConverters());<br>        }</code></pre></p>
+<pre><code>public Builder() {
+    this(Platform.get());
+}
+</code></pre><p>当我们调用:</p>
+<p>new Retrofit.Builder()<br>                .baseUrl(“<a href="https://wangshuipo.top" target="_blank" rel="noopener">https://wangshuipo.top</a>“)<br>                .build();<br><br>就会走入:Builder()–&gt; Builder(Platform platform)<br>然后我们看到，在Builder(Platform platform)构造函数里面，会往converterFactories里面添加进一个BuiltInConverters对象，所以默认的ConverterFactory就是BuiltInConverters。前面说过ConverterFactory主要是用来将HTTP返回结果进行类型转换或者将HTTP请求体进行类型转换，然后我们看下BuiltInConverters是怎样的转换方式:</p>
+<p><pre><code><br>final class BuiltInConverters extends Converter.Factory {<br>  //返回结果转换<br>  @Override<br>  public Converter<responsebody, ?=""> responseBodyConverter(Type type, Annotation[] annotations,<br>      Retrofit retrofit) {<br>    if (type == ResponseBody.class) {<br>      //如果annotations是Streaming类型<br>      return Utils.isAnnotationPresent(annotations, Streaming.class)<br>          ? StreamingResponseBodyConverter.INSTANCE<br>          : BufferingResponseBodyConverter.INSTANCE;<br>    }<br>    if (type == Void.class) {<br>      return VoidResponseBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</responsebody,></code></pre></p>
+<p>  //请求转换<br>  @Override<br>  public Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type,<br>      Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {<br>    if (RequestBody.class.isAssignableFrom(Utils.getRawType(type))) {<br>      return RequestBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }</p>
+<p>  static final class VoidResponseBodyConverter implements Converter<responsebody, void=""> {<br>    static final VoidResponseBodyConverter INSTANCE = new VoidResponseBodyConverter();</responsebody,></p>
+<pre><code>@Override public Void convert(ResponseBody value) throws IOException {
+  value.close();
+  return null;
+}
+</code></pre><p>  }</p>
+<p>  static final class RequestBodyConverter implements Converter<requestbody, requestbody=""> {<br>    static final RequestBodyConverter INSTANCE = new RequestBodyConverter();</requestbody,></p>
+<pre><code>@Override public RequestBody convert(RequestBody value) throws IOException {
+  return value;
+}
+</code></pre><p>  }</p>
+<p>  static final class StreamingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final StreamingResponseBodyConverter INSTANCE = new StreamingResponseBodyConverter();</responsebody,></p>
+<pre><code>@Override public ResponseBody convert(ResponseBody value) throws IOException {
+  return value;
+}
+</code></pre><p>  }</p>
+<p>  static final class BufferingResponseBodyConverter<br>      implements Converter<responsebody, responsebody=""> {<br>    static final BufferingResponseBodyConverter INSTANCE = new BufferingResponseBodyConverter();</responsebody,></p>
+<pre><code>@Override public ResponseBody convert(ResponseBody value) throws IOException {
+  try {
+    // Buffer the entire body to avoid future I/O.
+    return Utils.buffer(value);
+  } finally {
+    value.close();
+  }
+}
+</code></pre><p>  }</p>
+<p>  static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();</object,></p>
+<pre><code>@Override public String convert(Object value) {
+  return value.toString();
+}
+</code></pre><p>  }<br>}<br><br>返回结果转换的时候，有3种情况:</p>
+<p>如果返回类型是ResponseBody类型，那么可能返回的是:StreamingResponseBodyConverter.INSTANCE或者BufferingResponseBodyConverter.INSTANCE，再跟踪进去这两个类里面的convert函数:<br> @Override public ResponseBody convert(ResponseBody value){···}<br>发现传入的是ResponseBody，返回的也是ResponseBody（BufferingResponseBodyConverter里面有进行特殊处理，主要是为了去除future I/O），所以我们可以认为BuiltInConverters对HTTP返回结果没有进行转换处理。</p>
+<p>如果返回类型是Void类型，那么最终就将ResponseBody资源关闭后，直接返回null。<br>如果返回类型不是ResponseBody和Void类型，直接返回null。<br>同理，我们来看下请求体转换:</p>
+<p>//请求转换</p>
+<p><pre><code><br>  @Override<br>  public Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type,<br>      Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {<br>    if (RequestBody.class.isAssignableFrom(Utils.getRawType(type))) {<br>      return RequestBodyConverter.INSTANCE;<br>    }<br>    return null;<br>  }<br>static final class RequestBodyConverter implements Converter<requestbody, requestbody=""> {<br>    static final RequestBodyConverter INSTANCE = new RequestBodyConverter();</requestbody,></code></pre></p>
+<pre><code>@Override public RequestBody convert(RequestBody value) throws IOException {
+  return value;
+}
+</code></pre><p>  }<br><br>可以看到，如果是RequestBody类型，那就不转换，如果不是RequestBody类型，直接返回null。</p>
+<p>综上所述:BuiltInConverters只能响应ResponseBody和RequestBody，但是并不进行任何转换.对于其他类型，统统返回null。</p>
+<p>到这里，终于可以走进Retrofit.Builder.build()函数，一窥究竟：</p>
+<pre><code>&lt;pre&gt;&lt;code&gt;/**
+ * Create the {@link Retrofit} instance using the configured values.
+ * Note: If neither {@link #client} nor {@link #callFactory} is called a default {@link
+ * OkHttpClient} will be created and used.
+ */
+public Retrofit build() {
+    if (baseUrl == null) {
+        throw new IllegalStateException(&quot;Base URL required.&quot;);
+    }
+
+    okhttp3.Call.Factory callFactory = this.callFactory;
+    if (callFactory == null) {
+        //callFactory默认为OkHttpClient
+        callFactory = new OkHttpClient();
+    }
+
+    Executor callbackExecutor = this.callbackExecutor;
+    if (callbackExecutor == null) {
+        //默认的callbackExecutor为Platform.Android.MainThreadExecutor
+        //MainThreadExecutor继承Executor,并复写execute(Runnable r),
+        // execute内部直接通过主线程Handler.post(r),即r.run发生在主线程
+        callbackExecutor = platform.defaultCallbackExecutor();
+    }
+
+    // Make a defensive copy of the adapters and add the default Call adapter.
+    List&lt;CallAdapter.Factory&gt; adapterFactories = new ArrayList&lt;&gt;(this.adapterFactories);
+    //defaultCallAdapterFactory是ExecutorCallAdapterFactory
+    adapterFactories.add(platform.defaultCallAdapterFactory(callbackExecutor));
+
+    // Make a defensive copy of the converters.
+    //BuiltInConverters在Retrofit.Builder(Platform)构造时，已被传入
+    List&lt;Converter.Factory&gt; converterFactories = new ArrayList&lt;&gt;(this.converterFactories);
+
+    return new Retrofit(callFactory, baseUrl, converterFactories, adapterFactories,
+            callbackExecutor, validateEagerly);
+}
+</code></pre><p>build函数一进去，就看到:</p>
+<p>if (baseUrl == null) {<br>                throw new IllegalStateException(“Base URL required.”);<br>            }<br><br>这说明baseUrl是一定要进行配置的，否则程序就会抛出异常，这跟我们上面讲到的一致。<br>接着往下看：</p>
+<p><pre><code><br>     okhttp3.Call.Factory callFactory = this.callFactory;<br>            if (callFactory == null) {<br>                //callFactory默认为OkHttpClient<br>                callFactory = new OkHttpClient();<br>            }</code></pre></p>
+<pre><code>Executor callbackExecutor = this.callbackExecutor;
+if (callbackExecutor == null) {
+    //默认的callbackExecutor为Platform.Android.MainThreadExecutor
+    //MainThreadExecutor继承Executor,并复写execute(Runnable r),
+    // execute内部直接通过主线程Handler.post(r),即r.run发生在主线程
+    callbackExecutor = platform.defaultCallbackExecutor();
+}
+</code></pre><p>s<br><br>这里可以看到，如果没有配置okhttp3.Call.Factory，那么就会使用默认的HTTP工厂类:OkHttpClient,用于客户端程序创建okhttp3.Call对象，以进行实际的HTTP网络请求。<br>如果没有线程调度器callbackExecutor，那么就会使用默认的线程调度器:Platform.Android.MainThreadExecutor：</p>
+<p> <pre><code><br>  static class Android extends Platform {<br>        @Override<br>        public Executor defaultCallbackExecutor() {<br>            return new MainThreadExecutor();<br>        }</code></pre></p>
+<pre><code>    @Override
+    CallAdapter.Factory defaultCallAdapterFactory(@Nullable Executor callbackExecutor) {
+        if (callbackExecutor == null) throw new AssertionError();
+        return new ExecutorCallAdapterFactory(callbackExecutor);
+    }
+
+    static class MainThreadExecutor implements Executor {
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        @Override
+        public void execute(Runnable r) {
+            handler.post(r);
+        }
+    }
+}
+</code></pre><p><br>从源码可以看出，默认的线程调度器是主线程调度器。<br>接下来再看:<br>  <pre><code><br> // Make a defensive copy of the adapters and add the default Call adapter.<br>            List<calladapter.factory> adapterFactories = new ArrayList&lt;&gt;(this.adapterFactories);<br>            //defaultCallAdapterFactory是ExecutorCallAdapterFactory<br>            adapterFactories.add(platform.defaultCallAdapterFactory(callbackExecutor));<br>可以看到，这里为adapterFactories增加了一个CallAdapterFactory:</calladapter.factory></code></pre></p>
+<p>//Platform.java<br> CallAdapter.Factory defaultCallAdapterFactory(@Nullable Executor callbackExecutor) {<br>        if (callbackExecutor != null) {<br>            return new ExecutorCallAdapterFactory(callbackExecutor);<br>        }<br>        return DefaultCallAdapterFactory.INSTANCE;<br>    }<br>//ExecutorCallAdapterFactory.java<br>final class ExecutorCallAdapterFactory extends CallAdapter.Factory {<br>    final Executor callbackExecutor;</p>
+<pre><code>ExecutorCallAdapterFactory(Executor callbackExecutor) {
+    this.callbackExecutor = callbackExecutor;
+}
+
+@Override
+public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+    if (getRawType(returnType) != Call.class) {
+        return null;
+    }
+    final Type responseType = Utils.getCallResponseType(returnType);
+    return new CallAdapter&lt;Object, Call&lt;?&gt;&gt;() {
+        @Override
+        public Type responseType() {
+            return responseType;
+        }
+
+        @Override
+        public Call&lt;Object&gt; adapt(Call&lt;Object&gt; call) {
+            return new ExecutorCallbackCall&lt;&gt;(callbackExecutor, call);
+        }
+    };
+}
+
+static final class ExecutorCallbackCall&lt;T&gt; implements retrofit2.Call&lt;T&gt; {
+    final Executor callbackExecutor;
+    //HTTP请求委托类
+    final retrofit2.Call&lt;T&gt; delegate;
+
+    ExecutorCallbackCall(Executor callbackExecutor, Call&lt;T&gt; delegate) {
+        this.callbackExecutor = callbackExecutor;
+        this.delegate = delegate;
+    }
+    //异步请求
+    @Override
+    public void enqueue(final Callback&lt;T&gt; callback) {
+        checkNotNull(callback, &quot;callback == null&quot;);
+
+        delegate.enqueue(new Callback&lt;T&gt;() {
+            @Override
+            public void onResponse(Call&lt;T&gt; call, final Response&lt;T&gt; response) {
+                callbackExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (delegate.isCanceled()) {
+                            // Emulate OkHttp&apos;s behavior of throwing/delivering an IOException on cancellation.
+                            callback.onFailure(ExecutorCallbackCall.this, new IOException(&quot;Canceled&quot;));
+                        } else {
+                            callback.onResponse(ExecutorCallbackCall.this, response);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call&lt;T&gt; call, final Throwable t) {
+                callbackExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onFailure(ExecutorCallbackCall.this, t);
+                    }
+                });
+            }
+        });
+    }
+    //同步请求
+    @Override
+    public Response&lt;T&gt; execute() throws IOException {
+        return delegate.execute();
+    }
+   ···
+</code></pre><p>}<br><br>在Android平台上，callbackExecutor默认不为null，所以defaultCallAdapterFactory返回的是ExecutorCallAdapterFactory。从ExecutorCallAdapterFactory的get函数，可以看到，ExecutorCallAdapterFactory只会响应返回类型为Call的函数声明（所以，如果我们没有配置addCallAdapterFactory(),那么我们接口函数声明的返回类型必须为Call&lt;?&gt;），响应处理的最终结果就是返回一个CallAdapter，这个CallAdapter的adapt()函数会传入一个HTTP请求委托类，然后返回一个HTTP请求代理类:ExecutorCallbackCall<t> implements retrofit2.Call<t>，这个代理类代理了委托类的异步HTTP网络请求，并将返回结果通过线程调度器将回调监听函数分发到具体线程上执行（默认线程调度器是主线程调度）。</t></t></p>
+<p>讲到这里，Retrofit实例的配置创建就算是完成了。下面这个图展示了Retrofit.Builder提供的配置选项:<br>Builder<br>调用retrofit.create()方法获取请求接口实例<br>GitHubService service = retrofit.create(GitHubService.class);<br>那我们接下来就看一下create()的源码:</p>
+<p><pre><code><br> @SuppressWarnings(“unchecked”) // Single-interface proxy creation guarded by parameter safety.<br>    public <t> T create(final Class<t> service) {<br>        //1.是否是接口<br>        //2.不能继承其他接口<br>        Utils.validateServiceInterface(service);<br>        //预先加载解析注解：loadServiceMethod<br>        //默认false，即调用接口方法后，才进行解析<br>        if (validateEagerly) {<br>            eagerlyValidateMethods(service);<br>        }<br>        return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class&lt;?&gt;[]{service},<br>                new InvocationHandler() {<br>                    private final Platform platform = Platform.get();</t></t></code></pre></p>
+<pre><code>                @Override
+                public Object invoke(Object proxy, Method method, @Nullable Object[] args)
+                        throws Throwable {
+                    // If the method is a method from Object then defer to normal invocation.
+                    if (method.getDeclaringClass() == Object.class) {
+                        return method.invoke(this, args);
+                    }
+                    //java8平台使用
+                    if (platform.isDefaultMethod(method)) {
+                        return platform.invokeDefaultMethod(method, service, proxy, args);
+                    }
+                    ServiceMethod&lt;Object, Object&gt; serviceMethod =
+                            (ServiceMethod&lt;Object, Object&gt;) loadServiceMethod(method);
+                    OkHttpCall&lt;Object&gt; okHttpCall = new OkHttpCall&lt;&gt;(serviceMethod, args);
+                    return serviceMethod.callAdapter.adapt(okHttpCall);
+                }
+            });
+}
+</code></pre><p><br>这里我们可以看到，create方法返回的是一个 (T) Proxy.newProxyInstance()方法产生的一个动态代理对象（如果不清楚动态代理，可以看下我之前写的文章:Java代理模式,里面对java的动态代理有详细讲解）。使用该动态代理对象进行方法调用后，会自动被InvocationHandler拦截，最终进入InvocationHandler的invoke函数里面。</p>
+<p>由请求接口实例获取到Call对象<br>Call<list<repo>&gt; repos = service.listRepos(“octocat”)<br>从上面create的分析中，我们知道，此处的service是一个动态代理类对象，所以，在调用方法时，会被InvocationHandler的invoke方法拦截，所以调用:service.listRepos(“octocat”)就会进入InvocationHandler.invoke()中，查看下invoke函数，最主要的操作就是如下3句话:</list<repo></p>
+<p><pre><code><br> ServiceMethod<object, object=""> serviceMethod =<br>                                (ServiceMethod<object, object="">) loadServiceMethod(method);<br>                        OkHttpCall<object> okHttpCall = new OkHttpCall&lt;&gt;(serviceMethod, args);<br>                        return serviceMethod.callAdapter.adapt(okHttpCall);<br> </object></object,></object,></code></pre><br>ServiceMethod在Retrofit中是一个很重要的类，主要做的就是对接口方法注解进行解析，最终生成一个Request。</p>
+<p>那我们先来看下loadServiceMethod()源码：</p>
+<p><pre><code><br>ServiceMethod&lt;?, ?&gt; loadServiceMethod(Method method) {<br>        ServiceMethod&lt;?, ?&gt; result = serviceMethodCache.get(method);<br>        if (result != null) return result;</code></pre></p>
+<pre><code>    synchronized (serviceMethodCache) {
+        result = serviceMethodCache.get(method);
+        if (result == null) {
+            result = new ServiceMethod.Builder&lt;&gt;(this, method).build();
+            serviceMethodCache.put(method, result);
+        }
+    }
+    return result;
+}
+</code></pre><p>serviceMethodCache是一个缓存容器，是对接口方法的解析缓存。</p>
+<p>//class Retrofit<br>    private final Map<method, servicemethod<?,="" ?="">&gt; serviceMethodCache = new ConcurrentHashMap&lt;&gt;();<br>从loadServiceMethod()中可以看到，ServiceMethod的实例也是通过builder模式进行构建的，构建过程需传入Retrofit对象和Method对象。</method,></p>
+<p>Builder(Retrofit retrofit, Method method) {<br>      this.retrofit = retrofit;<br>      this.method = method;<br>      //取得接口方法的注解<br>      this.methodAnnotations = method.getAnnotations();<br>      //返回接口方法参数类型<br>      this.parameterTypes = method.getGenericParameterTypes();<br>      //返回接口方法各个参数注解<br>      //按参数声明顺序排列，每个参数可能有多个注解，故二维数组<br>      //parameterAnnotationsArray[0][i]:第一个参数第i个注解<br>      //parameterAnnotationsArray[1][j]:第二个参数第j个注解<br>      this.parameterAnnotationsArray = method.getParameterAnnotations();<br>    }</p>
+<p>public ServiceMethod build() {<br>      //CallAdapter<t, r=""> callAdapter;适配Call的响应类型，将默认响应类型R转换为类型T<br>      callAdapter = createCallAdapter();<br>      responseType = callAdapter.responseType();<br>      if (responseType == Response.class || responseType == okhttp3.Response.class) {<br>        throw methodError(“‘“</t,></p>
+<pre><code>        + Utils.getRawType(responseType).getName()
+        + &quot;&apos; is not a valid response body type. Did you mean ResponseBody?&quot;);
+  }
+  //Converter&lt;ResponseBody, T&gt; responseConverter;HTTP交互中，转换对象为数据 或 从数据转换为对象
+  responseConverter = createResponseConverter();
+
+  for (Annotation annotation : methodAnnotations) {
+    parseMethodAnnotation(annotation);
+  }
+  ···
+  ···
+
+  int parameterCount = parameterAnnotationsArray.length;
+  parameterHandlers = new ParameterHandler&lt;?&gt;[parameterCount];
+  for (int p = 0; p &lt; parameterCount; p++) {
+    Type parameterType = parameterTypes[p];
+    if (Utils.hasUnresolvableType(parameterType)) {
+      throw parameterError(p, &quot;Parameter type must not include a type variable or wildcard: %s&quot;,
+          parameterType);
+    }
+
+    Annotation[] parameterAnnotations = parameterAnnotationsArray[p];
+    if (parameterAnnotations == null) {
+      throw parameterError(p, &quot;No Retrofit annotation found.&quot;);
+    }
+
+    parameterHandlers[p] = parseParameter(p, parameterType, parameterAnnotations);
+  }
+  ···
+  ···
+  return new ServiceMethod&lt;&gt;(this);
+}
+</code></pre><p>在ServiceMethod.Builder.build()源码中可以看到:</p>
+<p>callAdapter = createCallAdapter();<br>首先创建一个callAdapter,具体创建过程如下:</p>
+<p>private CallAdapter<t, r=""> createCallAdapter() {<br>      //接口方法return类型<br>      Type returnType = method.getGenericReturnType();<br>     ···<br>      ···<br>      Annotation[] annotations = method.getAnnotations();<br>        //noinspection unchecked<br>      ···<br>      ···<br>        return (CallAdapter<t, r="">) retrofit.callAdapter(returnType, annotations);<br>    }<br>可以看到，其最终调用到的是retrofit.callAdapter()：</t,></t,></p>
+<p>  public CallAdapter&lt;?, ?&gt; callAdapter(Type returnType, Annotation[] annotations) {<br>        return nextCallAdapter(null, returnType, annotations);<br>    }</p>
+<p>/**</p>
+<pre><code> * Returns the {@link CallAdapter} for {@code returnType} from the available {@linkplain
+ * #callAdapterFactories() factories} except {@code skipPast}.
+ *
+ * @throws IllegalArgumentException if no call adapter available for {@code type}.
+ */
+public CallAdapter&lt;?, ?&gt; nextCallAdapter(@Nullable CallAdapter.Factory skipPast, Type returnType,
+                                         Annotation[] annotations) {
+    checkNotNull(returnType, &quot;returnType == null&quot;);
+    checkNotNull(annotations, &quot;annotations == null&quot;);
+
+    // final List&lt;CallAdapter.Factory&gt; adapterFactories;
+    int start = adapterFactories.indexOf(skipPast) + 1;
+    for (int i = start, count = adapterFactories.size(); i &lt; count; i++) {
+        CallAdapter&lt;?, ?&gt; adapter = adapterFactories.get(i).get(returnType, annotations, this);
+        if (adapter != null) {
+            return adapter;
+        }
+    }
+
+    //throw exception
+   ···
+    ···
+}
+</code></pre><p><br>可以看到，createCallAdapter()就是从Retrofit的List<calladapter.factory> adapterFactories数组中，遍历找到一个可以处理该接口方法返回类型和注解的CallAdapter&lt;?, ?&gt;。那根据我们之前的分析，如果我们没有进行CallAdapter的配置，那么默认的CallAdapter就是ExecutorCallAdapterFactory.get(Call.class,xxx,retrofit);</calladapter.factory></p>
+<p><pre><code><br>public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {<br>        if(getRawType(returnType) != Call.class) {<br>            return null;<br>        } else {<br>            final Type responseType = Utils.getCallResponseType(returnType);<br>            return new CallAdapter<object, call<?="">&gt;() {<br>                public Type responseType() {<br>                    return responseType;<br>                }</object,></code></pre></p>
+<pre><code>            public Call&lt;Object&gt; adapt(Call&lt;Object&gt; call) {
+                return new ExecutorCallAdapterFactory.ExecutorCallbackCall(ExecutorCallAdapterFactory.this.callbackExecutor, call);
+            }
+        };
+    }
+}
+</code></pre><p><br>可以看到，默认的CallAdapter.Factory只会响应接口方法返回类型为Call，所以遍历adapterFactories的时候，如果接口方法返回类型不是Call，那么ExecutorCallAdapterFactory.get()自然返回的就是null，然后就会继续找下一个CallAdapterFactory，继续尝试，直到找到能处理该接口方法返回类型的CallAdapterFactory，由其返回一个CallAdapter。</p>
+<p>上面的流程可以这样想（较为生动）:<br>createCallAdapter说:retrofit，给我一个能处理我这个接口方法返回类型（假设为Observable<t>）的CallAdapter。<br>retrofit接收到请求后，就会从自己的adapterFactories仓库中一个一个的进行询问:<br>首先找到默认的CallAdapter.Factory:ExecutorCallAdapterFactory,然后说：ExecutorCallAdapterFactory啊，你能处理Observable<t>这个返回类型吗?<br>ExecutorCallAdapterFactory一看,说:retrofit啊，你给我的返回类型不是Call类型，我没办法处理，你找下一位CallAdapter.Factory仁兄吧。<br>既然默认的ExecutorCallAdapterFactory没办法处理这个接口方法返回类型，那retrofit就只能继续问下一位CallAdapter.Factory啦，假设下一位是RxJava2CallAdapterFactory,然后，retrofit开始发问,说:RxJava2CallAdapterFactory仁兄呀，你能处理Observable<t>这个返回类型吗?<br>RxJava2CallAdapterFactory一看，说：retrofit兄啊，你这个Observable<t>我拿手呀，随随便便进行处理，处理的结果拿到了这个CallAdapter，你赶紧拿着给createCallAdapter交差吧。<br>retrofit一听，太高兴了，说到:RxJava2CallAdapterFactory兄啊，您真牛逼，谢谢您了，好的好的，我赶紧拿着您给的CallAdapter给createCallAdapter交差，那边催的紧呢。<br>于是，retrofit高高兴兴地就往createCallAdapter那边赶了，adapterFactories后面还没问到的兄弟就不管了，没办法，哥(retrofit)时间紧，没有那么多时间去一 一问候兄弟们，望兄弟们见谅 _。</t></t></t></t></p>
+<p>我们接着看ServiceMethod.Builder.build()方法，可以看到,createCallAdapter后，又createResponseConverter了:</p>
+<p> //Converter<responsebody, t=""> responseConverter;HTTP交互中，转换对象为数据 或 从数据转换为对象<br>      responseConverter = createResponseConverter();<br>responseConverter是Converter<responsebody, t="">类型，其实我们一看到这个，就应该大概知道是怎么做了，肯定又是跟retrofit请求，retrofit又从仓库中进行查找，只是这回是从List<converter.factory> converterFactories中查找，直到找到一个能处理这种responseType的Converter.Factory，由其返回一个Converter。让我们看下源码是不是这样的:</converter.factory></responsebody,></responsebody,></p>
+<p><pre><code><br>//ServiceMethod.java<br>    private Converter<responsebody, t=""> createResponseConverter() {<br>      Annotation[] annotations = method.getAnnotations();<br>      try {<br>        return retrofit.responseBodyConverter(responseType, annotations);<br>      } catch (RuntimeException e) { // Wide exception range because factories are user code.<br>        throw methodError(e, “Unable to create converter for %s”, responseType);<br>      }<br>    }<br>//Retrofit.java<br> public <t> Converter<responsebody, t=""> responseBodyConverter(Type type, Annotation[] annotations) {<br>        return nextResponseBodyConverter(null, type, annotations);<br>    }<br>   /**</responsebody,></t></responsebody,></code></pre></p>
+<pre><code> * Returns a {@link Converter} for {@link ResponseBody} to {@code type} from the available
+ * {@linkplain #converterFactories() factories} except {@code skipPast}.
+ *
+ * @throws IllegalArgumentException if no converter available for {@code type}.
+ */
+public &lt;T&gt; Converter&lt;ResponseBody, T&gt; nextResponseBodyConverter(
+        @Nullable Converter.Factory skipPast, Type type, Annotation[] annotations) {
+    checkNotNull(type, &quot;type == null&quot;);
+    checkNotNull(annotations, &quot;annotations == null&quot;);
+
+    int start = converterFactories.indexOf(skipPast) + 1;
+    for (int i = start, count = converterFactories.size(); i &lt; count; i++) {
+        Converter&lt;ResponseBody, ?&gt; converter =
+                converterFactories.get(i).responseBodyConverter(type, annotations, this);
+        if (converter != null) {
+            //noinspection unchecked
+            return (Converter&lt;ResponseBody, T&gt;) converter;
+        }
+    }
+    //throw exception
+    ···
+}&lt;/code&gt;&lt;/pre&gt;
+</code></pre><p>可以看到，跟我们上面所说的过程是一样的。<br>还记得吗，有一个默认的retrofit2.Converter.Factory是:BuiltInConverters。那从BuiltInConverters得到的Converter<responsebody, t="">是什么呢，根据我们之前的分析:</responsebody,></p>
+<p>如果responseType是ResponseBody类型，那么返回的还是ResponseBody（BufferingResponseBodyConverter有经过一些处理）；<br>如果responseType是Void类型，那么释放ResponseBody资源，然后返回null；<br>其他responseType类型，直接返回null。<br>所以，如果我们没有配置addConverterFactory，那么接口返回类型应该声明为Call<responsebody>或者Call<void>这类型的，这样，默认的retrofit2.Converter.Factory才能进行处理。</void></responsebody></p>
+<p>接着看Retrofit.Builder.build()方法，可以看到:<br>  <pre><code><br> for (Annotation annotation : methodAnnotations) {<br>        parseMethodAnnotation(annotation);<br>      }<br>这个是一个很重要的操作，就是对接口方法进行解析，追踪进去再看下解析源码:</code></pre></p>
+<p> private void parseMethodAnnotation(Annotation annotation) {<br>      if (annotation instanceof DELETE) {<br>        parseHttpMethodAndPath(“DELETE”, ((DELETE) annotation).value(), false);<br>      } else if (annotation instanceof GET) {<br>        parseHttpMethodAndPath(“GET”, ((GET) annotation).value(), false);<br>      } else if (annotation instanceof HEAD) {<br>        parseHttpMethodAndPath(“HEAD”, ((HEAD) annotation).value(), false);<br>        if (!Void.class.equals(responseType)) {<br>          throw methodError(“HEAD method must use Void as response type.”);<br>        }<br>      } else if (annotation instanceof PATCH) {<br>        parseHttpMethodAndPath(“PATCH”, ((PATCH) annotation).value(), true);<br>      } else if (annotation instanceof POST) {<br>        parseHttpMethodAndPath(“POST”, ((POST) annotation).value(), true);<br>      } else if (annotation instanceof PUT) {<br>        parseHttpMethodAndPath(“PUT”, ((PUT) annotation).value(), true);<br>      } else if (annotation instanceof OPTIONS) {<br>        parseHttpMethodAndPath(“OPTIONS”, ((OPTIONS) annotation).value(), false);<br>      } else if (annotation instanceof HTTP) {<br>        HTTP http = (HTTP) annotation;<br>        parseHttpMethodAndPath(http.method(), http.path(), http.hasBody());<br>      } else if (annotation instanceof retrofit2.http.Headers) {<br>        String[] headersToParse = ((retrofit2.http.Headers) annotation).value();<br>        if (headersToParse.length == 0) {<br>          throw methodError(“@Headers annotation is empty.”);<br>        }<br>        headers = parseHeaders(headersToParse);<br>      } else if (annotation instanceof Multipart) {<br>        if (isFormEncoded) {<br>          throw methodError(“Only one encoding annotation is allowed.”);<br>        }<br>        isMultipart = true;<br>      } else if (annotation instanceof FormUrlEncoded) {<br>        if (isMultipart) {<br>          throw methodError(“Only one encoding annotation is allowed.”);<br>        }<br>        isFormEncoded = true;<br>      }<br>    }<br><br>可以看到里面对很多方法都进行了解析，这里，我们就只拿GET方法解析源码来分析下解析流程，其余方法解析都是类似的:</p>
+<p><pre><code><br>parseHttpMethodAndPath(“GET”, ((GET) annotation).value(), false);</code></pre></p>
+<p>  private void parseHttpMethodAndPath(String httpMethod, String value, boolean hasBody) {<br>     ···<br>      ···<br>      ···<br>      this.relativeUrl = value;<br>      this.relativeUrlParamNames = parsePathParameters(value);<br>    }<br>按照官网那个例子，那么:this.relativeUrl = value = “users/{user}/repos”,在parseHttpMethodAndPath最后，调用了 parsePathParameters(value)：</p>
+<p>/**</p>
+<ul>
+<li>Gets the set of unique path parameters used in the given URI. If a parameter is used twice</li>
+<li>in the URI, it will only show up once in the set.<br><em>/<br>static Set<string> parsePathParameters(String path) {<br>Matcher m = PARAM_URL_REGEX.matcher(path);<br>Set<string> patterns = new LinkedHashSet&lt;&gt;();<br>while (m.find()) {<br> patterns.add(m.group(1));<br>}<br>return patterns;<br>}<br><br>这里采用正则表达式取出形如”{</string></string></em>}”这种结构的内容，保留在全局Set<string> relativeUrlParamNames集合里面。<br>像官网这个例子，当程序来到parsePathParameters(“users/{user}/repos”)的时候，正则表达式就获得了user这个字符串，并存储到全局relativeUrlParamNames里面。这样，接口方法的可变字符串就被记录了起来，后续只要获取到参数注解内容的名字是一样的（eg:@Path(“user”) String user,参数注解内容是”user“），将参数转换（Converter，默认为StringConverter,转换就是直接调用参数对象的toString()方法转成字符串）放入方法路径可成为一个真正的relativeUrl。<br>以上就是方法注解的解析过程。</string></li>
+</ul>
+<p>但是接口方法参数的注解还没进行解析，那我们就继续往下看ServiceMethod.Builder.build()方法，可以看到：<br>  <pre><code><br> //有多少个参数带注解<br>      int parameterCount = parameterAnnotationsArray.length;<br>      parameterHandlers = new ParameterHandler&lt;?&gt;[parameterCount];<br>      for (int p = 0; p &lt; parameterCount; p++) {<br>        //参数类型<br>        Type parameterType = parameterTypes[p];<br>        if (Utils.hasUnresolvableType(parameterType)) {<br>          throw parameterError(p, “Parameter type must not include a type variable or wildcard: %s”,<br>              parameterType);<br>        }<br>        //参数对应的注解数组<br>        Annotation[] parameterAnnotations = parameterAnnotationsArray[p];<br>        if (parameterAnnotations == null) {<br>          throw parameterError(p, “No Retrofit annotation found.”);<br>        }<br>        //根据参数类型和对应注解集合进行解析，封装到parameterHandlers中<br>        parameterHandlers[p] = parseParameter(p, parameterType, parameterAnnotations);<br>      }<br></code></pre><br>参数注解解析过程的最后调用了:parseParameter,这个方法会根据传入的参数类型和对应注解集合进行解析，封装成为ParameterHandler，将每个参数的注解解析最后都存入到parameterHandlers数组中，所以parameterHandlers[0]就是第一个带注解的参数的解析内容，parameterHandlers[1]就是第二个带注解的参数的解析内容····：</p>
+<p><pre><code><br> private ParameterHandler&lt;?&gt; parseParameter(<br>        int p, Type parameterType, Annotation[] annotations) {<br>      ParameterHandler&lt;?&gt; result = null;<br>      for (Annotation annotation : annotations) {<br>        ParameterHandler&lt;?&gt; annotationAction = parseParameterAnnotation(<br>            p, parameterType, annotations, annotation);</code></pre></p>
+<pre><code>    if (annotationAction == null) {
+      continue;
+    }
+
+    if (result != null) {
+      throw parameterError(p, &quot;Multiple Retrofit annotations found, only one allowed.&quot;);
+    }
+
+    result = annotationAction;
+  }
+
+  if (result == null) {
+    throw parameterError(p, &quot;No Retrofit annotation found.&quot;);
+  }
+
+  return result;
+}
+</code></pre><p>可以看到parseParameter主要做的就是遍历参数的所有注解，一个一个进行注解解析:parseParameterAnnotation,这个方法内部代码特别长，因为有很多种注解需要分析，在这里，我们就只抽取出@Path的注解解析部分内容:</p>
+<p> //参数注解解析<br>    private ParameterHandler&lt;?&gt; parseParameterAnnotation(<br>        int p, Type type, Annotation[] annotations, Annotation annotation) {<br>        ····<br>else if (annotation instanceof Path) {<br>        if (gotQuery) {<br>          throw parameterError(p, “A @Path parameter must not come after a @Query.”);<br>        }<br>        if (gotUrl) {<br>          throw parameterError(p, “@Path parameters may not be used with @Url.”);<br>        }<br>        if (relativeUrl == null) {<br>          throw parameterError(p, “@Path can only be used with relative url on @%s”, httpMethod);<br>        }<br>        gotPath = true;</p>
+<pre><code>  Path path = (Path) annotation;
+  String name = path.value();
+  /**
+   * 有效性检验:
+   * 1.命名规范：必须符合正则:[a-zA-Z][a-zA-Z0-9_-]*
+   * 2.注解value必须存在relativeUrlParamNames方法变量，对应起来
+   */
+  validatePathName(p, name);
+
+  Converter&lt;?, String&gt; converter = retrofit.stringConverter(type, annotations);
+  return new ParameterHandler.Path&lt;&gt;(name, converter, path.encoded());
+} 
+  ···
+  ···
+  ···
+</code></pre><p>}<br>这里对@Path的解析最主要的就是获取一个Converter&lt;?, String&gt;，获取是通过retrofit.stringConverter()：</p>
+<p> /**</p>
+<pre><code> * Returns a {@link Converter} for {@code type} to {@link String} from the available
+ * {@linkplain #converterFactories() factories}.
+ */
+public &lt;T&gt; Converter&lt;T, String&gt; stringConverter(Type type, Annotation[] annotations) {
+    checkNotNull(type, &quot;type == null&quot;);
+    checkNotNull(annotations, &quot;annotations == null&quot;);
+
+    for (int i = 0, count = converterFactories.size(); i &lt; count; i++) {
+        Converter&lt;?, String&gt; converter =
+                converterFactories.get(i).stringConverter(type, annotations, this);
+        if (converter != null) {
+            //noinspection unchecked
+            return (Converter&lt;T, String&gt;) converter;
+        }
+    }
+
+    // Nothing matched. Resort to default converter which just calls toString().
+    //noinspection unchecked
+    return (Converter&lt;T, String&gt;) BuiltInConverters.ToStringConverter.INSTANCE;
+}
+</code></pre><p><br>同样，这里是通过遍历converterFactories，找到一个能处理这种类型type的Converter.Factory，返回一个 Converter&lt;?, String&gt;，如果找不到，就使用BuiltInConverters.ToStringConverter.INSTANCE。查看下BuiltInConverters.ToStringConverter.INSTANCE源码:</p>
+<p><pre><code><br>//BuiltInConverters.java<br>static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();</object,></code></pre></p>
+<pre><code>@Override public String convert(Object value) {
+  return value.toString();
+}
+</code></pre><p>  }<br>可以看到，默认的StringConverter就是通过调用paramter对象的toString方法，直接将结果类型转成String类型。<br>到这里，我们就明白了:</p>
+<p><pre><code><br>public interface GitHubService {<br>  @GET(“users/{user}/repos”)<br>  Call<list<repo>&gt; listRepos(@Path(“user”) String user);<br>}<br></list<repo></code></pre><br>接口方法参数user的类型其实可以不用是String类型，就算是其他类型也可以，但是默认的StringConverter调用该类型对象的toString方法返回的结果要符合你自己需求。<br>比如，我们现在自定义一个java bean:</p>
+<p><pre><code><br>public class StringWrapper {<br>    private String content;<br>    public StringWrapper(String content)<br>    {<br>        this.content = content;<br>    }</code></pre></p>
+<pre><code>@Override
+public String toString() {
+    return content;
+}
+</code></pre><p>}<br>public interface ApiService {<br>  @GET(“users/{user}/gg”)<br>  Call<basebean> bean(@Path(“user”) StringWrapper user);<br>}<br><br>这样也是可以的，因为StringWrapper.toString跟我们上面直接定义成的String最终结果是一样的。<br>回到正题，parseParameterAnnotation中对@Path的解析最终会返回一个ParameterHandler.Path对象:</basebean></p>
+<p><pre><code><br>static final class Path<t> extends ParameterHandler<t> {<br>    private final String name;<br>    private final Converter<t, string=""> valueConverter;<br>    private final boolean encoded;</t,></t></t></code></pre></p>
+<pre><code>Path(String name, Converter&lt;T, String&gt; valueConverter, boolean encoded) {
+  this.name = checkNotNull(name, &quot;name == null&quot;);
+  this.valueConverter = valueConverter;
+  this.encoded = encoded;
+}
+
+@Override void apply(RequestBuilder builder, @Nullable T value) throws IOException {
+  if (value == null) {
+    throw new IllegalArgumentException(
+        &quot;Path parameter \&quot;&quot; + name + &quot;\&quot; value must not be null.&quot;);
+  }
+  builder.addPathParam(name, valueConverter.convert(value), encoded);
+}
+</code></pre><p>  }<br><br>最后，参数解析所有的信息都放入到了全局数据parameterHandlers中，没个parameterHandlers[i]都包含了各个参数的所有注解解析信息。<br>ParameterHandler<t></t></p>
+<p>到这里，ServiceMethod.Builder.build()方法也算是解析完毕了。<br>总结一下:ServiceMethod的创建过程主要做了几件事：<br>根据接口方法返回类型，通过遍历retrofit的adapterFactories列表，找到适合的CallAdapter<t, r=""> callAdapter。<br>根据HTTP返回结果类型，通过遍历retrofit的converterFactories列表，找到适合的Converter<responsebody, t=""> responseConverter。<br>对接口方法注解进行解析:parseMethodAnnotation(Annotation annotation)。<br>对接口方法参数注解进行解析:parseParameter<br>完成以上工作后，创建ServiceMethod对象。<br>最后，用一张图来表达下ServiceMethod的创建过程:<br>ServiceMethod.Builder.build</responsebody,></t,></p>
+<p>现在继续分析Retrofit.create中InvocationHandler的invoke剩余部分源码:<br> OkHttpCall<object> okHttpCall = new OkHttpCall&lt;&gt;(serviceMethod, args);<br>return serviceMethod.callAdapter.adapt(okHttpCall);<br>这里创建了一个okHttpCall：</object></p>
+<p><pre><code><br>final class OkHttpCall<t> implements retrofit2.Call<t> {<br>        ···<br>        ···<br> @GuardedBy(“this”)<br>  private @Nullable okhttp3.Call rawCall;<br>        ···<br>}<br>OkHttpCall<t><br></t></t></t></code></pre><br>这里可以看到OkHttpCall内部持有一个okhttp3.Call，所以其实OkHttpCall所进行的HTTP请求实际上都是交由okhttp3.Call进行的。</p>
+<p>InvocationHandler的invoke最后返回了:</p>
+<p>return serviceMethod.callAdapter.adapt(okHttpCall);<br>经过前面的分析，假设我们对Retrofit没有经过特殊配置，即Retrofit采用默认配置，那么:serviceMethod.callAdapter返回的就是默认的ExecutorCallAdapterFactory.get(Call.class,annotations,retrofit)</p>
+<p><pre><code><br>//ExecutorCallAdapterFactory.java<br>@Override<br>  public CallAdapter&lt;?, ?&gt; get(Type returnType, Annotation[] annotations, Retrofit retrofit) {<br>    if (getRawType(returnType) != Call.class) {<br>      return null;<br>    }<br>    final Type responseType = Utils.getCallResponseType(returnType);<br>    return new CallAdapter<object, call<?="">&gt;() {<br>      @Override public Type responseType() {<br>        return responseType;<br>      }</object,></code></pre></p>
+<pre><code>  @Override public Call&lt;Object&gt; adapt(Call&lt;Object&gt; call) {
+    return new ExecutorCallbackCall&lt;&gt;(callbackExecutor, call);
+  }
+};
+</code></pre><p>  }<br>serviceMethod.callAdapter.adapt(okHttpCall)返回的就是一个new ExecutorCallbackCall&lt;&gt;(callbackExecutor, okHttpCall)的对象。</p>
+<p>static final class ExecutorCallbackCall<t> implements retrofit2.Call<t> {<br>        final Executor callbackExecutor;<br>        //HTTP请求委托类<br>        final retrofit2.Call<t> delegate;</t></t></t></p>
+<pre><code>ExecutorCallbackCall(Executor callbackExecutor, Call&lt;T&gt; delegate) {
+    this.callbackExecutor = callbackExecutor;
+    this.delegate = delegate;
+}
+</code></pre><p><br>这里可以看到，ExecutorCallbackCall就是okHttpCall的代理类，而okHttpCall又持有okhttp3.Call实例。因此，进行HTTP请求的过程就明晰了:<br>ExecutorCallbackCall.enqueue–&gt;okHttpCall.enqueue–&gt;okhttp3.Call.enqueue<br>ExecutorCallbackCall持有的Executor callbackExecutor默认是主线程调度器，会将ExecutorCallbackCall发送HTTP请求的返回结果回调到主线程上执行。</p>
+<p>那我们最后就来看一下发送网络请求的具体过程。</p>
+<p>进行网络请求（同步/异步）<br>网络请求是通过我们得到的ExecutorCallbackCall&lt;&gt;(callbackExecutor, okHttpCall)对象进行请求,这里就只看下异步请求过程：</p>
+<p>repos.enqueue(new Callback<responsebody>() {/<em>*</em>/});<br>上面分析知道，ExecutorCallbackCall内部封装了网络请求和线程调度作用，而实际起网络请求作用的是OkHttpCall。<br>那我们就来看下OkHttpCall的异步网络请求enqueue源码:</responsebody></p>
+<p><pre><code><br>@Override<br> public void enqueue(final Callback<t> callback) {<br>        ···<br>        ···<br>        okhttp3.Call call;<br>        ···<br>        ···</t></code></pre></p>
+<pre><code>call = rawCall = createRawCall();
+···
+···
+
+call.enqueue(new okhttp3.Callback() {
+        @Override
+        public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse)
+        throws IOException {
+                Response&lt;T&gt; response;
+                ···
+                ···
+                callSuccess(response);
+        }
+
+        @Override
+        public void onFailure(okhttp3.Call call, IOException e) {
+                ···
+                callback.onFailure(OkHttpCall.this, e);
+                ···
+        }
+                ···
+                ···
+}
+</code></pre><p>}<br><br>可以看到，OkHttpCall里面是通过函数createRawCall获得一个真正的能用于HTTP网络请求的okhttp3.Call对象，那么我们就来看下createRawCall()源码是怎样构建出一个okhttp3.Call对象:</p>
+<p><pre><code><br> private okhttp3.Call createRawCall() throws IOException {<br>    Request request = serviceMethod.toRequest(args);<br>    okhttp3.Call call = serviceMethod.callFactory.newCall(request);<br>    if (call == null) {<br>      throw new NullPointerException(“Call.Factory returned null.”);<br>    }<br>    return call;<br>  }<br></code></pre><br>这里，我们先来看下:</p>
+<p>okhttp3.Call call = serviceMethod.callFactory.newCall(request);<br>serviceMethod.callFactory默认就是retrofit的callFactory，也就是OkHttpClient，所以这里就是由OkHttpClient创建出一个真正用于进行HTTP网络请求的okhttp3.Call对象。</p>
+<p>接下来我们回顾上一行代码，可以看到是通过serviceMethod.toRequest(args)构建出一个Request,此处的args就是我们接口方法的参数，那么我们就先来看下serviceMethod.toRequest源码是怎样构建一个Request的：<br> <pre><code><br> /<em>* Builds an HTTP request from method arguments. </em>/<br>  Request toRequest(@Nullable Object… args) throws IOException {<br>//从接口方法注解解析信息<br>    RequestBuilder requestBuilder = new RequestBuilder(httpMethod, baseUrl, relativeUrl, headers,<br>        contentType, hasBody, isFormEncoded, isMultipart);</code></pre></p>
+<pre><code>@SuppressWarnings(&quot;unchecked&quot;) // It is an error to invoke a method with the wrong arg types.
+</code></pre><p>//接口方法参数注解解析信息<br>    ParameterHandler<object>[] handlers = (ParameterHandler<object>[]) parameterHandlers;</object></object></p>
+<pre><code>int argumentCount = args != null ? args.length : 0;
+if (argumentCount != handlers.length) {
+  throw new IllegalArgumentException(&quot;Argument count (&quot; + argumentCount
+      + &quot;) doesn&apos;t match expected count (&quot; + handlers.length + &quot;)&quot;);
+}
+
+for (int p = 0; p &lt; argumentCount; p++) {
+  handlers[p].apply(requestBuilder, args[p]);
+}
+
+return requestBuilder.build();
+</code></pre><p>  }<br><br>所以我们前面为什么说ServiceMethod在Retrofit里面是很重要的，在这里也可以知道，ServiceMethod既负责解析接口方法，接口参数，又负责从retrofit那边获取合适的CallAdapter和Converter，又要负责将接口解析出来的内容组装成一个HTTP Request···可以说，ServiceMethod就是Retrofit的核心引擎。<br>回到toRequest函数，从上面的源码中可以看到，首先是根据接口方法解析的信息组装成了一个RequestBuilder，然后再根据方法参数信息（Object… args），经由之前解析的参数注解信息可以得到一个最终的RequestBuilder，由这些信息就可以build出一个Request。<br>toRequest里面有句代码是:</p>
+<p>handlers[p].apply(requestBuilder, args[p]);<br>这里其实获取得到的就是接口方法第p个参数解析出来的效果，举个例子来说，比如，我们之前handlers[p]解析出来的是@Path的信息，那么handlers[p]就是一个ParameterHandler.Path类型的对象，而ParameterHandler.Path是ParameterHandler静态内部类，同时也是一个ParameterHandler子类:<br> <pre><code><br> static final class Path<t> extends ParameterHandler<t> {<br>    private final String name;<br>    private final Converter<t, string=""> valueConverter;<br>    private final boolean encoded;</t,></t></t></code></pre></p>
+<pre><code>Path(String name, Converter&lt;T, String&gt; valueConverter, boolean encoded) {
+  this.name = checkNotNull(name, &quot;name == null&quot;);
+  this.valueConverter = valueConverter;
+  this.encoded = encoded;
+}
+
+@Override void apply(RequestBuilder builder, @Nullable T value) throws IOException {
+  if (value == null) {
+    throw new IllegalArgumentException(
+        &quot;Path parameter \&quot;&quot; + name + &quot;\&quot; value must not be null.&quot;);
+  }
+  builder.addPathParam(name, valueConverter.convert(value), encoded);
+}
+</code></pre><p>  }<br><br>所以，handlers[p].apply(requestBuilder, args[p])按官网的例子就变成了:<br>Path.apply(requestBuilder,String user)–&gt;builder.addPathParam(”user”, valueConverter.convert(“user”), encoded);<br>而由我们前面的分析，此处的valueConverter默认是ToStringConverter：</p>
+<p><pre><code><br> static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();</object,></code></pre></p>
+<pre><code>@Override public String convert(Object value) {
+  return value.toString();
+}
+</code></pre><p>  }<br><br>所以valueConverter.convert(“user”)–&gt;”user”.toString()==”user”,所以最终返回的就是字符串”user”,所以：<br>builder.addPathParam(”user”, valueConverter.convert(“user”), encoded)–&gt;builder.addPathParam(”user”, “user”, encoded)。<br>对于@Path来说，肯定是将参数信息替换掉接口方法注解内容相对路径的{*}内容，所以，builder.addPathParam就是实现这个功能的:</p>
+<p><pre><code><br>void addPathParam(String name, String value, boolean encoded) {<br>    if (relativeUrl == null) {<br>      // The relative URL is cleared when the first query parameter is set.<br>      throw new AssertionError();<br>    }<br>    relativeUrl = relativeUrl.replace(“{“ + name + “}”, canonicalizeForPath(value, encoded));<br>  }<br></code></pre><br>经过以上步骤，就构建出了一个HTTP请求。<br>最后，我们就可以用这个请求进行真正的网络发送call.enqueue，回顾上面OkHttpCall.enqueue方法，可以看到请求返回结果解析是在：</p>
+<p><pre><code><br>//OkHttpCall.enqueue片段代码<br>  call.enqueue(new okhttp3.Callback() {<br>      @Override public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse)<br>          throws IOException {<br>        Response<t> response;<br>        try {<br>          response = parseResponse(rawResponse);<br>        } catch (Throwable e) {<br>          callFailure(e);<br>          return;<br>        }<br>        callSuccess(response);<br>      }</t></code></pre></p>
+<pre><code>@Override public void onFailure(okhttp3.Call call, IOException e) {
+  try {
+    callback.onFailure(OkHttpCall.this, e);
+  } catch (Throwable t) {
+    t.printStackTrace();
+  }
+}
+
+private void callFailure(Throwable e) {
+  try {
+    callback.onFailure(OkHttpCall.this, e);
+  } catch (Throwable t) {
+    t.printStackTrace();
+  }
+}
+
+private void callSuccess(Response&lt;T&gt; response) {
+  try {
+    callback.onResponse(OkHttpCall.this, response);
+  } catch (Throwable t) {
+    t.printStackTrace();
+  }
+}
+</code></pre><p>可以看到，请求成功的时候，会调用parseResponse得到一个我们需要的Response<t>类型对象，具体解析方法如下：</t></p>
+<p>  Response<t> parseResponse(okhttp3.Response rawResponse) throws IOException {<br>    ResponseBody rawBody = rawResponse.body();<br>    ···<br>    ···<br>    ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody(rawBody);<br>    ···<br>      T body = serviceMethod.toResponse(catchingBody);<br>      return Response.success(body, rawResponse);<br>    ···<br>  }<br><br>parseResponse就是对得到的rawResponse进行处理判断，最后交由到serviceMethod.toResponse做出最终的转换。</t></p>
+<p><pre><code><br> /<em>* Builds a method return value from an HTTP response body. </em>/<br>  R toResponse(ResponseBody body) throws IOException {<br>    return responseConverter.convert(body);<br>  }<br></code></pre><br>可以看到这里就是用到了数据转换器Converter<responsebody, r="">将HTTP返回结果ResponseBody转换成我们自己定义的类型R（默认的Converter.Factory是BuiltInConverters,它所生产的Convert默认不对ResponseBody进行转换）。</responsebody,></p>
+<p>所以分析到了这里，Retrofit整体的流程我们也差不多整理完毕了。</p>
+<p>最后进行总结一下：</p>
+<p>我们要是用Retrofit进行HTTP网络请求的时候，首先要创建一个接口进行HTTP动作描述，之所以用接口是为了后面动态创建一个对应的接口代理类（java的动态代理只能支持接口）；<br>接口描述创建完成后，通过建造者模式可以配置出一个retrofit实例<br>由retrofit的`create函数就可以创建出一个接口的动态代理类<br>调用动态代理类的接口方法时，就会被动态代理类拦截，拦截的主要原因就是为了隐式的创建出一个用于HTTP网络请求的Call对象，具体做了3件事:<br> 1. 解析接口注解内容并保存，功能类为ServiceMethod。<br> 2. 创建一个OkHttpCall对象，OkHttpCall内部持有okhttp3.Call实例。OkHttpCall的作用就是从ServiceMethod和当前参数获取得到一个Request，并通过OkHttpClient根据这个Request创建出一个okhttp3.Call对象。<br> 3. 最后从ServiceMethod中拿到一个可以处理接口方法返回类型的CallAdapter，由其adapt返回得到一个可以对HTTP请求结果进行线程调度的retrofit2.Call对象（该Call对象是OkHttpCall的代理类）。</p>
 
       
 
