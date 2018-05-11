@@ -280,7 +280,7 @@ if (callbackExecutor == null) {
     // execute内部直接通过主线程Handler.post(r),即r.run发生在主线程
     callbackExecutor = platform.defaultCallbackExecutor();
 }
-</code></pre><p>s<br><br>这里可以看到，如果没有配置okhttp3.Call.Factory，那么就会使用默认的HTTP工厂类:OkHttpClient,用于客户端程序创建okhttp3.Call对象，以进行实际的HTTP网络请求。<br>如果没有线程调度器callbackExecutor，那么就会使用默认的线程调度器:Platform.Android.MainThreadExecutor：</p>
+</code></pre><p><br><br>这里可以看到，如果没有配置okhttp3.Call.Factory，那么就会使用默认的HTTP工厂类:OkHttpClient,用于客户端程序创建okhttp3.Call对象，以进行实际的HTTP网络请求。<br>如果没有线程调度器callbackExecutor，那么就会使用默认的线程调度器:Platform.Android.MainThreadExecutor：</p>
 <p> <pre><code><br>  static class Android extends Platform {<br>        @Override<br>        public Executor defaultCallbackExecutor() {<br>            return new MainThreadExecutor();<br>        }</code></pre></p>
 <pre><code>    @Override
     CallAdapter.Factory defaultCallAdapterFactory(@Nullable Executor callbackExecutor) {
@@ -1036,7 +1036,7 @@ http://www.wangshuibo.github.io
 		toc_hide_index: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
