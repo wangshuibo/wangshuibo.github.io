@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/imgs/huangfangping.jpg">
 <meta property="og:image" content="/assets/retrofit_img/retrofit_flow_chart.png">
-<meta property="og:updated_time" content="2018-05-11T02:06:53.844Z">
+<meta property="og:updated_time" content="2018-05-12T07:38:46.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码分析">
 <meta name="twitter:description" content="导言retrofit的最大特点就是解耦，要解耦就需要大量的设计模式。假如一点设计模式都不懂的人，可能很难看懂retrofit。~_~ 不要着急, 先上图，压压惊。 首先呢，还是看一下流程图。（如果哪有遗漏，可以私发给我 QQ号:203911607）">
@@ -688,42 +688,27 @@ return requestBuilder.build();
   builder.addPathParam(name, valueConverter.convert(value), encoded);
 }
 </code></pre><p>  }<br><br>所以，handlers[p].apply(requestBuilder, args[p])按官网的例子就变成了:<br>Path.apply(requestBuilder,String user)–&gt;builder.addPathParam(”user”, valueConverter.convert(“user”), encoded);<br>而由我们前面的分析，此处的valueConverter默认是ToStringConverter：</p>
-<p><pre><code><br> static final class ToStringConverter implements Converter<object, string=""> {<br>    static final ToStringConverter INSTANCE = new ToStringConverter();</object,></code></pre></p>
-<pre><code>@Override public String convert(Object value) {
-  return value.toString();
-}
-</code></pre><p>  }<br><br>所以valueConverter.convert(“user”)–&gt;”user”.toString()==”user”,所以最终返回的就是字符串”user”,所以：<br>builder.addPathParam(”user”, valueConverter.convert(“user”), encoded)–&gt;builder.addPathParam(”user”, “user”, encoded)。<br>对于@Path来说，肯定是将参数信息替换掉接口方法注解内容相对路径的{*}内容，所以，builder.addPathParam就是实现这个功能的:</p>
-<p><pre><code><br>void addPathParam(String name, String value, boolean encoded) {<br>    if (relativeUrl == null) {<br>      // The relative URL is cleared when the first query parameter is set.<br>      throw new AssertionError();<br>    }<br>    relativeUrl = relativeUrl.replace(“{“ + name + “}”, canonicalizeForPath(value, encoded));<br>  }<br></code></pre><br>经过以上步骤，就构建出了一个HTTP请求。<br>最后，我们就可以用这个请求进行真正的网络发送call.enqueue，回顾上面OkHttpCall.enqueue方法，可以看到请求返回结果解析是在：</p>
-<p><pre><code><br>//OkHttpCall.enqueue片段代码<br>  call.enqueue(new okhttp3.Callback() {<br>      @Override public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse)<br>          throws IOException {<br>        Response<t> response;<br>        try {<br>          response = parseResponse(rawResponse);<br>        } catch (Throwable e) {<br>          callFailure(e);<br>          return;<br>        }<br>        callSuccess(response);<br>      }</t></code></pre></p>
-<pre><code>@Override public void onFailure(okhttp3.Call call, IOException e) {
-  try {
-    callback.onFailure(OkHttpCall.this, e);
-  } catch (Throwable t) {
-    t.printStackTrace();
-  }
-}
-
-private void callFailure(Throwable e) {
-  try {
-    callback.onFailure(OkHttpCall.this, e);
-  } catch (Throwable t) {
-    t.printStackTrace();
-  }
-}
-
-private void callSuccess(Response&lt;T&gt; response) {
-  try {
-    callback.onResponse(OkHttpCall.this, response);
-  } catch (Throwable t) {
-    t.printStackTrace();
-  }
-}
-</code></pre><p>可以看到，请求成功的时候，会调用parseResponse得到一个我们需要的Response<t>类型对象，具体解析方法如下：</t></p>
-<p>  Response<t> parseResponse(okhttp3.Response rawResponse) throws IOException {<br>    ResponseBody rawBody = rawResponse.body();<br>    ···<br>    ···<br>    ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody(rawBody);<br>    ···<br>      T body = serviceMethod.toResponse(catchingBody);<br>      return Response.success(body, rawResponse);<br>    ···<br>  }<br><br>parseResponse就是对得到的rawResponse进行处理判断，最后交由到serviceMethod.toResponse做出最终的转换。</t></p>
-<p><pre><code><br> /<em>* Builds a method return value from an HTTP response body. </em>/<br>  R toResponse(ResponseBody body) throws IOException {<br>    return responseConverter.convert(body);<br>  }<br></code></pre><br>可以看到这里就是用到了数据转换器Converter<responsebody, r="">将HTTP返回结果ResponseBody转换成我们自己定义的类型R（默认的Converter.Factory是BuiltInConverters,它所生产的Convert默认不对ResponseBody进行转换）。</responsebody,></p>
+<blockquote>
+<p>static final class ToStringConverter implements Converter<object, string=""> { <br><br>    static final ToStringConverter INSTANCE = new ToStringConverter(); <br><br>    @Override public String convert(Object value) { <br><br>      return value.toString(); <br><br>    } <br><br>  } <br></object,></p>
+</blockquote>
+<p>所以valueConverter.convert(“user”)–&gt;”user”.toString()==”user”,所以最终返回的就是字符串”user”,所以：<br>builder.addPathParam(”user”, valueConverter.convert(“user”), encoded)–&gt;builder.addPathParam(”user”, “user”, encoded)。<br>对于@Path来说，肯定是将参数信息替换掉接口方法注解内容相对路径的{*}内容，所以，builder.addPathParam就是实现这个功能的:</p>
+<blockquote>
+<p>void addPathParam(String name, String value, boolean encoded) { <br><br>    if (relativeUrl == null) { <br><br>      // The relative URL is cleared when the first query parameter is set. <br><br>      throw new AssertionError(); <br><br>    } <br><br>    relativeUrl = relativeUrl.replace(“{“ + name + “}”, canonicalizeForPath <br>(value, encoded)); <br><br>  } <br></p>
+</blockquote>
+<p>经过以上步骤，就构建出了一个HTTP请求。<br>最后，我们就可以用这个请求进行真正的网络发送call.enqueue，<br> 回顾上面OkHttpCall.enqueue方法，可以看到请求返回结果解析是在：</p>
+<blockquote>
+<p>//OkHttpCall.enqueue片段代码<br><br>   call.enqueue(new okhttp3.Callback() { <br><br>       @Override public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse)<br><br>            throws IOException { <br><br>          Response<t> response;<br><br>          try {<br><br>            response = parseResponse(rawResponse); <br><br>         } catch (Throwable e) { <br><br>            callFailure(e); <br><br>            return; <br><br>          } <br><br>          callSuccess(response); <br><br>        } <br><br>        @Override public void onFailure(okhttp3.Call call, IOException e) { <br><br>          try {<br><br>          callback.onFailure(OkHttpCall.this, e); <br><br>        } catch (Throwable t) { <br><br>          t.printStackTrace(); <br><br>        } <br><br>      } <br><br>      private void callFailure(Throwable e) { <br><br>        try {<br>          callback.onFailure(OkHttpCall.this, e); <br><br>        } catch (Throwable t) { <br><br>          t.printStackTrace(); <br><br>        } <br><br>      }<br><br>      private void callSuccess(Response<t> response) { <br><br>        try { <br><br>          callback.onResponse(OkHttpCall.this, response); <br><br>        } catch (Throwable t) { <br><br>          t.printStackTrace(); <br><br>        } <br><br>      } <br><br>可以看到，请求成功的时候，会调用parseResponse得到一个我们需要的Response<t>类型对象，具体解析方法如下： <br><br>  Response<t> parseResponse(okhttp3.Response rawResponse) <br><br>  throws IOException { <br><br>    ResponseBody rawBody = rawResponse.body(); <br><br>          ··· <br><br>          ··· <br><br>    ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody                        (rawBody); <br><br>                  ···  <br><br>      T body = serviceMethod.toResponse(catchingBody); <br><br>      return Response.success(body, rawResponse); <br><br>                 ··· <br><br>  } <br><br>parseResponse就是对得到的rawResponse进行处理判断，<br> 最后交由到serviceMethod.toResponse做出最终的转换。 <br><br> /<em>* Builds a method return value from an HTTP response body. </em>/ <br><br>  R toResponse(ResponseBody body) throws IOException { <br><br>    return responseConverter.convert(body); <br><br>  } <br><br>可以看到这里就是用到了数据转换器Converter<responsebody, r="">将HTTP返回结果ResponseBody转换成我们自己定义的类型R（默认的Converter.Factory是BuiltInConverters,它所生产的Convert默认不对ResponseBody进行转换）。</responsebody,></t></t></t></t></p>
+</blockquote>
 <p>所以分析到了这里，Retrofit整体的流程我们也差不多整理完毕了。</p>
 <p>最后进行总结一下：</p>
-<p>我们要是用Retrofit进行HTTP网络请求的时候，首先要创建一个接口进行HTTP动作描述，之所以用接口是为了后面动态创建一个对应的接口代理类（java的动态代理只能支持接口）；<br>接口描述创建完成后，通过建造者模式可以配置出一个retrofit实例<br>由retrofit的`create函数就可以创建出一个接口的动态代理类<br>调用动态代理类的接口方法时，就会被动态代理类拦截，拦截的主要原因就是为了隐式的创建出一个用于HTTP网络请求的Call对象，具体做了3件事:<br> 1. 解析接口注解内容并保存，功能类为ServiceMethod。<br> 2. 创建一个OkHttpCall对象，OkHttpCall内部持有okhttp3.Call实例。OkHttpCall的作用就是从ServiceMethod和当前参数获取得到一个Request，并通过OkHttpClient根据这个Request创建出一个okhttp3.Call对象。<br> 3. 最后从ServiceMethod中拿到一个可以处理接口方法返回类型的CallAdapter，由其adapt返回得到一个可以对HTTP请求结果进行线程调度的retrofit2.Call对象（该Call对象是OkHttpCall的代理类）。</p>
+<p>我们要是用Retrofit进行HTTP网络请求的时候，首先要创建一个接口进行HTTP动作描述，之所以用接口是为了后面动态创建一个对应的接口代理类（java的动态代理只能支持接口）；<br>接口描述创建完成后，通过建造者模式可以配置出一个retrofit实例<br>由retrofit的`create函数就可以创建出一个接口的动态代理类<br>调用动态代理类的接口方法时，就会被动态代理类拦截，拦截的主要原因就是为了隐式的创建出一个用于HTTP网络请求的Call对象，具体做了3件事:</p>
+<blockquote>
+<ol>
+<li>解析接口注解内容并保存，功能类为ServiceMethod。<br></li>
+<li>创建一个OkHttpCall对象，OkHttpCall内部持有okhttp3.Call实例。OkHttpCall的作用就是从ServiceMethod和当前参数获取得到一个Request，并通过OkHttpClient根据这个Request创建出一个okhttp3.Call对象。<br></li>
+<li>最后从ServiceMethod中拿到一个可以处理接口方法返回类型的CallAdapter，由其adapt返回得到一个可以对HTTP请求结果进行线程调度的retrofit2.Call对象（该Call对象是OkHttpCall的代理类）。<br></li>
+</ol>
+</blockquote>
 
       
 
