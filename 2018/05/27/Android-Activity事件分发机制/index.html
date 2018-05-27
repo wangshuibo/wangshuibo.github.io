@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="">
   <title>Android Activity事件分发机制 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| - | - ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTION_UPMO|抬起View（">
+  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| ——–   | —–:   | :—-: ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTI">
 <meta name="keywords" content="Android Activity事件分发机制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Activity事件分发机制">
 <meta property="og:url" content="/2018/05/27/Android-Activity事件分发机制/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| - | - ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTION_UPMO|抬起View（">
+<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| ——–   | —–:   | :—-: ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTI">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-27T08:22:14.707Z">
+<meta property="og:updated_time" content="2018-05-27T08:24:22.080Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Activity事件分发机制">
-<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| - | - ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTION_UPMO|抬起View（">
+<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)|事件类型|具体动作|| ——–   | —–:   | :—-: ||MotionEvent.ACTION_DOWN|按下View（所有事件的开始)||MotionEvent.ACTI">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -192,8 +192,34 @@
 <p>Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象 </p>
 </blockquote>
 <ul>
-<li>事件类型(4种)<br>|事件类型|具体动作|<br>| - | - |<br>|MotionEvent.ACTION_DOWN|按下View（所有事件的开始)|<br>|MotionEvent.ACTION_UPMO|抬起View（与DOWN对应)|<br>|MotionEvent.ACTION_MOVE|滑动View（非人为原因)|<br>|MotionEvent.ACTION_CANCEL|结束事件（非人为原因)|</li>
+<li>事件类型(4种)<br>|事件类型|具体动作|<br>| ——–   | —–:   | :—-: |<br>|MotionEvent.ACTION_DOWN|按下View（所有事件的开始)|<br>|MotionEvent.ACTION_UPMO|抬起View（与DOWN对应)|<br>|MotionEvent.ACTION_MOVE|滑动View（非人为原因)|<br>|MotionEvent.ACTION_CANCEL|结束事件（非人为原因)|</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>水果</th>
+<th style="text-align:right">价格</th>
+<th style="text-align:center">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>香蕉</td>
+<td style="text-align:right">$1</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>苹果</td>
+<td style="text-align:right">$1</td>
+<td style="text-align:center">6</td>
+</tr>
+<tr>
+<td>草莓</td>
+<td style="text-align:right">$1</td>
+<td style="text-align:center">7</td>
+</tr>
+</tbody>
+</table>
 
       
 
@@ -453,15 +479,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android Activity事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">git命令</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
