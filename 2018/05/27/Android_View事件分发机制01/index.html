@@ -17,7 +17,7 @@
 <meta property="og:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
-<meta property="og:updated_time" content="2018-05-27T10:33:27.878Z">
+<meta property="og:updated_time" content="2018-05-27T10:36:16.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View事件分发机制01">
 <meta name="twitter:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
@@ -242,10 +242,10 @@
 <h3 id="接着我们继续看-superDispatchTouchEvent-ev-方法"><a href="#接着我们继续看-superDispatchTouchEvent-ev-方法" class="headerlink" title="接着我们继续看 superDispatchTouchEvent(ev) 方法"></a>接着我们继续看 superDispatchTouchEvent(ev) 方法</h3><blockquote>
 <p>这里我在说下窗口机制:主要是由Activity—&gt;PhoneWindow—&gt;DecorView—&gt;ContentView，也就是PhoneWindow通过继承Window抽象类,然后触发这个方法，接着调用DecorView方法,将当前手势传下去，因为DecorView是继承FrameLayout。由于FrameLayout的父类是ViewGroup，DecorView间接=ViewGroup(下一章节会说到),放松一下,图片走起,哈哈哈</p>
 </blockquote>
-<iframe height="300" width="300" src="http://wangshuipo.top/assets/imgs/zhuangbi01.gif">
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * 分析2：getWindow().superDispatchTouchEvent(ev)</span><br><span class="line">  * 说明：</span><br><span class="line">  *     a. getWindow() = 获取Window类的对象</span><br><span class="line">  *     b. Window类是抽象类，其唯一实现类 = PhoneWindow类；即此处的Window类对象 = PhoneWindow类对象</span><br><span class="line">  *     c. Window类的superDispatchTouchEvent() = 1个抽象方法，由子类PhoneWindow类实现</span><br><span class="line">  */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">return</span> mDecor.superDispatchTouchEvent(event);</span><br><span class="line">        // mDecor = 顶层View（DecorView）的实例对象</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/assets/distribution_mechanism_img/Activity事件分发机制.png" alt=""></p>
+<iframe height="300" width="300" src="http://wangshuipo.top/assets/imgs/zhuangbi01.gif">
+
 </iframe>
       
 
@@ -509,15 +509,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">retrofit源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
               </li>
             
             <div class="clearfix"></div>
