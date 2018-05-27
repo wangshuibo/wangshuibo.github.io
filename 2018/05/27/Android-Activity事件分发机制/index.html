@@ -16,10 +16,12 @@
 <meta property="og:site_name" content="涂白的记忆博客">
 <meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-27T09:18:46.199Z">
+<meta property="og:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
+<meta property="og:updated_time" content="2018-05-27T09:51:26.295Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Activity事件分发机制">
 <meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
+<meta name="twitter:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -167,7 +169,7 @@
 	<div id="toc-article" class="toc-article">
 	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
 		<strong class="toc-title">文章目录</strong>
-         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-text"><a href="#&#x6E90;&#x7801;&#x5206;&#x6790;" class="headerlink" title="&#x6E90;&#x7801;&#x5206;&#x6790;"></a>&#x6E90;&#x7801;&#x5206;&#x6790;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接着我们继续看-superDispatchTouchEvent-ev-方法"><span class="toc-text"><a href="#&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B;-superDispatchTouchEvent-ev-&#x65B9;&#x6CD5;" class="headerlink" title="&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B; superDispatchTouchEvent(ev) &#x65B9;&#x6CD5;"></a>&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B; superDispatchTouchEvent(ev) &#x65B9;&#x6CD5;</span></a></li></ol></li></ol> 
+         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-text"><a href="#&#x6E90;&#x7801;&#x5206;&#x6790;" class="headerlink" title="&#x6E90;&#x7801;&#x5206;&#x6790;"></a>&#x6E90;&#x7801;&#x5206;&#x6790;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接着我们继续看-superDispatchTouchEvent-ev-方法"><span class="toc-text"><a href="#&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B;-superDispatchTouchEvent-ev-&#x65B9;&#x6CD5;" class="headerlink" title="&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B; superDispatchTouchEvent(ev) &#x65B9;&#x6CD5;"></a>&#x63A5;&#x7740;&#x6211;&#x4EEC;&#x7EE7;&#x7EED;&#x770B; superDispatchTouchEvent(ev) &#x65B9;&#x6CD5;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#流程图"><span class="toc-text"><a href="#&#x6D41;&#x7A0B;&#x56FE;" class="headerlink" title="&#x6D41;&#x7A0B;&#x56FE;"></a>&#x6D41;&#x7A0B;&#x56FE;</span></a></li></ol></li></ol> 
          </div>
    <script type="text/javascript">
 	function showToc(){
@@ -240,6 +242,7 @@
 <p>这里我在说下窗口机制:主要是由Activity—&gt;PhoneWindow—&gt;DecorView—&gt;ContentView，也就是PhoneWindow通过继承Window抽象类,然后触发这个方法，接着调用DecorView方法,将当前手势传下去，因为DecorView是继承FrameLayout。由于FrameLayout的父类是ViewGroup，DecorView间接=ViewGroup(下一章节会说到)</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * 分析2：getWindow().superDispatchTouchEvent(ev)</span><br><span class="line">  * 说明：</span><br><span class="line">  *     a. getWindow() = 获取Window类的对象</span><br><span class="line">  *     b. Window类是抽象类，其唯一实现类 = PhoneWindow类；即此处的Window类对象 = PhoneWindow类对象</span><br><span class="line">  *     c. Window类的superDispatchTouchEvent() = 1个抽象方法，由子类PhoneWindow类实现</span><br><span class="line">  */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">return</span> mDecor.superDispatchTouchEvent(event);</span><br><span class="line">        // mDecor = 顶层View（DecorView）的实例对象</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/assets/distribution_mechanism_img/Activity事件分发机制.png" alt=""></p>
 
       
 
