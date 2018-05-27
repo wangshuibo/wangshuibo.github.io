@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="">
   <title>Android Activity事件分发机制 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) 事件类型    具体动作 | MotionEvent.ACTION_DOWN  | 按下View（所有事件的开始  || ———————————– | ———————————–|| M">
+  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) | 事件类型|具体动作|| ——-|——-|| MotionEvent.ACTION_DOWN| 按下View（所有事件的开始)|| MotionEvent.ACTION_UPMO">
 <meta name="keywords" content="Android Activity事件分发机制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Activity事件分发机制">
 <meta property="og:url" content="/2018/05/27/Android-Activity事件分发机制/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) 事件类型    具体动作 | MotionEvent.ACTION_DOWN  | 按下View（所有事件的开始  || ———————————– | ———————————–|| M">
+<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) | 事件类型|具体动作|| ——-|——-|| MotionEvent.ACTION_DOWN| 按下View（所有事件的开始)|| MotionEvent.ACTION_UPMO">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-27T08:06:03.487Z">
+<meta property="og:updated_time" content="2018-05-27T08:13:54.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Activity事件分发机制">
-<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) 事件类型    具体动作 | MotionEvent.ACTION_DOWN  | 按下View（所有事件的开始  || ———————————– | ———————————–|| M">
+<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种) | 事件类型|具体动作|| ——-|——-|| MotionEvent.ACTION_DOWN| 按下View（所有事件的开始)|| MotionEvent.ACTION_UPMO">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -192,9 +192,8 @@
 <p>Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象 </p>
 </blockquote>
 <ul>
-<li>事件类型(4种)</li>
-<li><p>事件类型    具体动作</p>
-<p>| MotionEvent.ACTION_DOWN  | 按下View（所有事件的开始  |<br>| ———————————– | ———————————–|<br>| MotionEvent.ACTION_UP       | 抬起View（与DOWN对应）   |<br>| MotionEvent.ACTION_MOVE    | 滑动View                |<br>| MotionEvent.ACTION_CANCEL| 结束事件（非人为原因）    | </p>
+<li><p>事件类型(4种)</p>
+<p>| 事件类型|具体动作|<br>| ——-|——-|<br>| MotionEvent.ACTION_DOWN| 按下View（所有事件的开始)|<br>| MotionEvent.ACTION_UPMO  | 抬起View（与DOWN对应）   |<br>| MotionEvent.ACTION_MOVE    | 滑动View（非人为原因）    |<br>| MotionEvent.ACTION_CANCEL| 结束事件（非人为原因）    | </p>
 </li>
 </ul>
 
