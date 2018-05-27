@@ -187,7 +187,7 @@
 </tr>
 <tr>
 <td><center>MotionEvent.ACTION_MOVE</center></td>
-<td style="text-align:right"><center>滑动View（非人为原因)</center></td>
+<td style="text-align:right"><center>滑动View</center></td>
 </tr>
 <tr>
 <td><center>MotionEvent.ACTION_CANCEL</center></td>
@@ -207,8 +207,10 @@
 <blockquote>
 <p>dispatchTouchEvent()—&gt;onInterceptTouchEvent()(备注:这个方法只有ViewGroup有,View和Activity没有)—&gt;onTouchEvent()</p>
 </blockquote>
-<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Called to process touch screen events.  You can override this to</span><br><span class="line">     * intercept all touch screen events before they are dispatched to the</span><br><span class="line">     * window.  Be sure to call this implementation <span class="keyword">for</span> touch screen events</span><br><span class="line">     * that should be handled normally.</span><br><span class="line">     *</span><br><span class="line">     * @param ev The touch screen event.</span><br><span class="line">     *</span><br><span class="line">     * @<span class="built_in">return</span> boolean Return <span class="literal">true</span> <span class="keyword">if</span> this event was consumed.</span><br><span class="line">     */</span><br><span class="line">    public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">        // 一般事件列开始都是DOWN事件 = 按下事件，故此处基本是<span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            onUserInteraction();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">            <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">                // 若getWindow().superDispatchTouchEvent(ev)的返回<span class="literal">true</span></span><br><span class="line">                // 则Activity.dispatchTouchEvent（）就返回<span class="literal">true</span>，则方法结束。即 ：该点击事件停止往下传递 &amp; 事件传递过程结束</span><br><span class="line">                // 否则：继续往下调用Activity.onTouchEvent</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">return</span> onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3>
+        
+          <a class="article-more-a" href="/2018/05/27/Android-Activity事件分发机制/#more">more >></a>
+        
       
 
       
@@ -358,11 +360,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
+                <a href="javascript:void(0)" class="js-tag color3">排序</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">排序</a>
+                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
               </li>
              
               <li class="article-tag-list-item">
