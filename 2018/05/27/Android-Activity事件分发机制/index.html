@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="">
   <title>Android Activity事件分发机制 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)     事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（与">
+  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
 <meta name="keywords" content="Android Activity事件分发机制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Activity事件分发机制">
 <meta property="og:url" content="/2018/05/27/Android-Activity事件分发机制/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)     事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（与">
+<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-27T08:34:07.406Z">
+<meta property="og:updated_time" content="2018-05-27T08:48:51.345Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Activity事件分发机制">
-<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)     事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（与">
+<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -167,7 +167,7 @@
 	<div id="toc-article" class="toc-article">
 	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
 		<strong class="toc-title">文章目录</strong>
-         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li></ol> 
+         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-text"><a href="#&#x6E90;&#x7801;&#x5206;&#x6790;" class="headerlink" title="&#x6E90;&#x7801;&#x5206;&#x6790;"></a>&#x6E90;&#x7801;&#x5206;&#x6790;</span></a></li></ol></li></ol> 
          </div>
    <script type="text/javascript">
 	function showToc(){
@@ -187,12 +187,14 @@
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p> 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li><p>当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）</p>
 <blockquote>
 <p>Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象 </p>
 </blockquote>
-<ul>
-<li>事件类型(4种)</li>
+</li>
+<li><p>事件类型(4种)</p>
+</li>
 </ul>
 <table>
 <thead>
@@ -204,7 +206,7 @@
 <tbody>
 <tr>
 <td><center>MotionEvent.ACTION_DOWN</center></td>
-<td style="text-align:right">按下View（所有事件的开始)</td>
+<td style="text-align:right"><center>按下View（所有事件的开始)</center></td>
 </tr>
 <tr>
 <td><center>MotionEvent.ACTION_UPMO</center></td>
@@ -220,6 +222,19 @@
 </tr>
 </tbody>
 </table>
+<ul>
+<li><p>事件在哪些对象之间进行传递</p>
+<blockquote>
+<p>Activity—&gt;ViewGroup—&gt;View</p>
+</blockquote>
+</li>
+<li><p>核心方法</p>
+</li>
+</ul>
+<blockquote>
+<p>dispatchTouchEvent()—&gt;onInterceptTouchEvent()(备注:这个方法只有ViewGroup有,View和Activity没有)—&gt;onTouchEvent()</p>
+</blockquote>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Called to process touch screen events.  You can override this to</span><br><span class="line">     * intercept all touch screen events before they are dispatched to the</span><br><span class="line">     * window.  Be sure to call this implementation <span class="keyword">for</span> touch screen events</span><br><span class="line">     * that should be handled normally.</span><br><span class="line">     *</span><br><span class="line">     * @param ev The touch screen event.</span><br><span class="line">     *</span><br><span class="line">     * @<span class="built_in">return</span> boolean Return <span class="literal">true</span> <span class="keyword">if</span> this event was consumed.</span><br><span class="line">     */</span><br><span class="line">    public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">        // 一般事件列开始都是DOWN事件 = 按下事件，故此处基本是<span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            onUserInteraction();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">            <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">                // 若getWindow().superDispatchTouchEvent(ev)的返回<span class="literal">true</span></span><br><span class="line">                // 则Activity.dispatchTouchEvent（）就返回<span class="literal">true</span>，则方法结束。即 ：该点击事件停止往下传递 &amp; 事件传递过程结束</span><br><span class="line">                // 否则：继续往下调用Activity.onTouchEvent</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">return</span> onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
       
 
@@ -479,15 +494,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android Activity事件分发机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">git命令</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android Activity事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
