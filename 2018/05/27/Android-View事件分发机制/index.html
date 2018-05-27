@@ -6,23 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="">
-  <title>Android Activity事件分发机制 | 涂白的记忆博客</title>
+  <title>Android View事件分发机制 | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
+  <meta name="description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
 <meta name="keywords" content="Android Activity事件分发机制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android Activity事件分发机制">
-<meta property="og:url" content="/2018/05/27/Android-Activity事件分发机制/index.html">
+<meta property="og:title" content="Android View事件分发机制">
+<meta property="og:url" content="/2018/05/27/Android-View事件分发机制/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
+<meta property="og:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/assets/imgs/zhuangbi01.gif">
 <meta property="og:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
-<meta property="og:updated_time" content="2018-05-27T09:57:12.294Z">
+<meta property="og:updated_time" content="2018-05-27T10:18:42.757Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android Activity事件分发机制">
-<meta name="twitter:description" content="前言 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTION_UPMO 抬起View（">
-<meta name="twitter:image" content="/assets/imgs/zhuangbi01.gif">
+<meta name="twitter:title" content="Android View事件分发机制">
+<meta name="twitter:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
+<meta name="twitter:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -143,19 +142,19 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Android-Activity事件分发机制" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Android-View事件分发机制" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Android Activity事件分发机制
+      Android View事件分发机制
     </h1>
   
 
         
-        <a href="/2018/05/27/Android-Activity事件分发机制/" class="archive-article-date">
+        <a href="/2018/05/27/Android-View事件分发机制/" class="archive-article-date">
   	<time datetime="2018-05-27T07:51:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-27</time>
 </a>
         
@@ -191,6 +190,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li>从Activity开始分发</li>
 <li><p>当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）</p>
 <blockquote>
 <p>Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象 </p>
@@ -242,10 +242,11 @@
 <h3 id="接着我们继续看-superDispatchTouchEvent-ev-方法"><a href="#接着我们继续看-superDispatchTouchEvent-ev-方法" class="headerlink" title="接着我们继续看 superDispatchTouchEvent(ev) 方法"></a>接着我们继续看 superDispatchTouchEvent(ev) 方法</h3><blockquote>
 <p>这里我在说下窗口机制:主要是由Activity—&gt;PhoneWindow—&gt;DecorView—&gt;ContentView，也就是PhoneWindow通过继承Window抽象类,然后触发这个方法，接着调用DecorView方法,将当前手势传下去，因为DecorView是继承FrameLayout。由于FrameLayout的父类是ViewGroup，DecorView间接=ViewGroup(下一章节会说到),放松一下,图片走起,哈哈哈</p>
 </blockquote>
-<p><img src="/assets/imgs/zhuangbi01.gif" alt=""></p>
+<iframe height="300" width="300" src="http://wangshuipo.top/assets/imgs/zhuangbi01.gif">
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * 分析2：getWindow().superDispatchTouchEvent(ev)</span><br><span class="line">  * 说明：</span><br><span class="line">  *     a. getWindow() = 获取Window类的对象</span><br><span class="line">  *     b. Window类是抽象类，其唯一实现类 = PhoneWindow类；即此处的Window类对象 = PhoneWindow类对象</span><br><span class="line">  *     c. Window类的superDispatchTouchEvent() = 1个抽象方法，由子类PhoneWindow类实现</span><br><span class="line">  */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">return</span> mDecor.superDispatchTouchEvent(event);</span><br><span class="line">        // mDecor = 顶层View（DecorView）的实例对象</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/assets/distribution_mechanism_img/Activity事件分发机制.png" alt=""></p>
-
+</iframe>
       
 
       
@@ -345,7 +346,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2018/05/27/Android-Activity事件分发机制/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2018/05/27/Android-View事件分发机制/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -395,7 +396,7 @@
   
   <section id="comments">
 <!--高速版，加载速度快，使用前需测试页面的兼容性-->
-<div id="SOHUCS" sid="Android Activity事件分发机制"  style="padding: 0px 30px 0px 46px;"></div>
+<div id="SOHUCS" sid="Android View事件分发机制"  style="padding: 0px 30px 0px 46px;"></div>
 <script>
   (function(){
     var appid = 'cytBitWYk',
@@ -504,11 +505,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android Activity事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android Activity事件分发机制</a>
+                <a href="javascript:void(0)" class="js-tag color1">git命令</a>
               </li>
              
               <li class="article-tag-list-item">
