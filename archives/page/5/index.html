@@ -6,20 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="">
-  <title>七种基本排序算法的实现和总结 | 涂白的记忆博客</title>
+  <title>Archives | 涂白的记忆博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、冒泡排序123456789101112 原理：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。 步骤：1.1 比较相邻的元素。如果倒数第一个比倒数第二个小，就交换他们两个。       1.2 对第0个到第n-1个数据做同样的工作。这时，最小的数就“浮”到了数组最开始的位置上。       1.3 针对所有的元素重复以上的步骤，除了第一个。       1.4 持续每次对越来越少的">
-<meta name="keywords" content="排序">
-<meta property="og:type" content="article">
-<meta property="og:title" content="七种基本排序算法的实现和总结">
-<meta property="og:url" content="/2017/12/10/px/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="涂白的记忆博客">
+<meta property="og:url" content="/archives/page/5/index.html">
 <meta property="og:site_name" content="涂白的记忆博客">
-<meta property="og:description" content="1、冒泡排序123456789101112 原理：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。 步骤：1.1 比较相邻的元素。如果倒数第一个比倒数第二个小，就交换他们两个。       1.2 对第0个到第n-1个数据做同样的工作。这时，最小的数就“浮”到了数组最开始的位置上。       1.3 针对所有的元素重复以上的步骤，除了第一个。       1.4 持续每次对越来越少的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-12T12:43:56.383Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="七种基本排序算法的实现和总结">
-<meta name="twitter:description" content="1、冒泡排序123456789101112 原理：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。 步骤：1.1 比较相邻的元素。如果倒数第一个比倒数第二个小，就交换他们两个。       1.2 对第0个到第n-1个数据做同样的工作。这时，最小的数就“浮”到了数组最开始的位置上。       1.3 针对所有的元素重复以上的步骤，除了第一个。       1.4 持续每次对越来越少的">
+<meta name="twitter:title" content="涂白的记忆博客">
   
     <link rel="alternative" href="/atom.xml" title="涂白的记忆博客" type="application/atom+xml">
   
@@ -140,99 +135,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-px" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      七种基本排序算法的实现和总结
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/12/10/px/" class="archive-article-date">
+  	<time datetime="2017-12-10T08:33:18.179Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-10</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/12/10/px/">七种基本排序算法的实现和总结</a>
     </h1>
   
 
-        
-        <a href="/2017/12/10/px/" class="archive-article-date">
-  	<time datetime="2017-12-10T08:33:18.179Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-10</time>
-</a>
-        
-      </header>
-    
-	<!-- 目录内容 -->
-
-    <p class="show-toc-btn" id="show-toc-btn" onclick="showToc();" style="display:none">
-          <span class="btn-bg"></span>
-          <span class="btn-text">文章导航</span>
-          </p>
-	<div id="toc-article" class="toc-article">
-	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
-		<strong class="toc-title">文章目录</strong>
-         <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、冒泡排序"><span class="toc-text"><a href="#1&#x3001;&#x5192;&#x6CE1;&#x6392;&#x5E8F;" class="headerlink" title="1&#x3001;&#x5192;&#x6CE1;&#x6392;&#x5E8F;"></a>1&#x3001;&#x5192;&#x6CE1;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、选择排序"><span class="toc-text"><a href="#2&#x3001;&#x9009;&#x62E9;&#x6392;&#x5E8F;" class="headerlink" title="2&#x3001;&#x9009;&#x62E9;&#x6392;&#x5E8F;"></a>2&#x3001;&#x9009;&#x62E9;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、插入排序"><span class="toc-text"><a href="#3&#x3001;&#x63D2;&#x5165;&#x6392;&#x5E8F;" class="headerlink" title="3&#x3001;&#x63D2;&#x5165;&#x6392;&#x5E8F;"></a>3&#x3001;&#x63D2;&#x5165;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、归并排序"><span class="toc-text"><a href="#4&#x3001;&#x5F52;&#x5E76;&#x6392;&#x5E8F;" class="headerlink" title="4&#x3001;&#x5F52;&#x5E76;&#x6392;&#x5E8F;"></a>4&#x3001;&#x5F52;&#x5E76;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、堆排序"><span class="toc-text"><a href="#5&#x3001;&#x5806;&#x6392;&#x5E8F;" class="headerlink" title="5&#x3001;&#x5806;&#x6392;&#x5E8F;"></a>5&#x3001;&#x5806;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、希尔排序"><span class="toc-text"><a href="#6&#x3001;&#x5E0C;&#x5C14;&#x6392;&#x5E8F;" class="headerlink" title="6&#x3001;&#x5E0C;&#x5C14;&#x6392;&#x5E8F;"></a>6&#x3001;&#x5E0C;&#x5C14;&#x6392;&#x5E8F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、快速排序"><span class="toc-text"><a href="#7&#x3001;&#x5FEB;&#x901F;&#x6392;&#x5E8F;" class="headerlink" title="7&#x3001;&#x5FEB;&#x901F;&#x6392;&#x5E8F;"></a>7&#x3001;&#x5FEB;&#x901F;&#x6392;&#x5E8F;</span></a></li></ol> 
-         </div>
-   <script type="text/javascript">
-	function showToc(){
-		var toc_article = document.getElementById("toc-article");
-		var show_toc_btn = document.getElementById("show-toc-btn");
-		toc_article.setAttribute("style","display:block");
-		show_toc_btn.setAttribute("style","display:none");
-		};
-	function showBtn(){
-		var toc_article = document.getElementById("toc-article");
-		var show_toc_btn = document.getElementById("show-toc-btn");
-		toc_article.setAttribute("style","display:none");
-		show_toc_btn.setAttribute("style","display:block");
-		};
-   </script>
-      
-<!-- 目录内容结束 -->
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1、冒泡排序"><a href="#1、冒泡排序" class="headerlink" title="1、冒泡排序"></a>1、冒泡排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 原理：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。</span><br><span class="line"> 步骤：1.1 比较相邻的元素。如果倒数第一个比倒数第二个小，就交换他们两个。</span><br><span class="line">       1.2 对第0个到第n-1个数据做同样的工作。这时，最小的数就“浮”到了数组最开始的位置上。</span><br><span class="line">       1.3 针对所有的元素重复以上的步骤，除了第一个。</span><br><span class="line">       1.4 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。</span><br><span class="line"><span class="keyword">for</span> (int i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (int j = arr.length  - 1; j &gt; i; j--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt; arr[j - 1]) &#123;</span><br><span class="line">            SortUtil.swap(arr, j, j - 1);</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2、选择排序"><a href="#2、选择排序" class="headerlink" title="2、选择排序"></a>2、选择排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  原理：不断地选择剩余元素中的最小者</span><br><span class="line">  步骤：2.1 找到数组中最小元素的下标，将第一个元素与最小元素下标的数进行交换。</span><br><span class="line">	    2.2 在剩下的元素中找到最小元素下标并将其与数组第二个元素交换，直至整个数组排序。</span><br><span class="line"><span class="keyword">for</span> (int i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">    int minIndex = i;</span><br><span class="line">    <span class="keyword">for</span> (int j = i + 1; j &lt; arr.length; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt; arr[minIndex]) &#123;</span><br><span class="line">            minIndex = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SortUtil.swap(arr, minIndex, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3、插入排序"><a href="#3、插入排序" class="headerlink" title="3、插入排序"></a>3、插入排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 原理：插入排序的工作原理是，对于每个未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</span><br><span class="line"> 步骤：3.1 从第一个元素开始，该元素可以认为已经被排序</span><br><span class="line">	   3.2 取出下一个元素，在已经排序的元素序列中从后向前扫描</span><br><span class="line">	   3.3 如果被扫描的元素（已排序）大于新元素，将该元素后移一位</span><br><span class="line">	   3.4 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置</span><br><span class="line">	   3.5 将新元素插入到该位置后</span><br><span class="line">	   3.6 重复步骤2~5</span><br><span class="line"><span class="keyword">for</span> (int i = 1; i &lt; arr.length; i++) &#123;</span><br><span class="line">    int temp = arr[i];</span><br><span class="line">    int j;</span><br><span class="line">    <span class="keyword">for</span> (j = i; j &gt; 0 &amp;&amp; (arr[j - 1] &gt; temp); j--) &#123;</span><br><span class="line">        arr[j] = arr[j -1];</span><br><span class="line">    &#125;</span><br><span class="line">    arr[j] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> 原理：将长度为n的记录不断划分，划分到长度为1时，再两两合并，依次递归。主要是利用分治法来处理。</span><br><span class="line">@Override</span><br><span class="line">public int[] sort(int[] arr) &#123;</span><br><span class="line">    mergeSort(arr, 0, arr.length - 1);</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">private void mergeSort(int[] array, int start, int end) &#123;</span><br><span class="line">    <span class="keyword">if</span> (start &gt;= end) <span class="built_in">return</span>;</span><br><span class="line">    int middle = (start + end) / 2;</span><br><span class="line">    mergeSort(array, start, middle);</span><br><span class="line">    mergeSort(array, middle + 1, end);</span><br><span class="line">    merge(array, start, middle, end);</span><br><span class="line">&#125;</span><br><span class="line">private void merge(int[] array, int start, int middle, int end) &#123;</span><br><span class="line">    int[] aux = new int[end - start + 1];</span><br><span class="line">    System.arraycopy(array, start, aux, 0, end - start + 1);</span><br><span class="line">    int left = start;</span><br><span class="line">    int right = middle + 1;</span><br><span class="line">    <span class="keyword">for</span> (int k = start; k &lt;= end; k++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left &gt; middle) &#123;</span><br><span class="line">            array[k] = aux[right - start];</span><br><span class="line">            right++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (right &gt; end) &#123;</span><br><span class="line">            array[k] = aux[left - start];</span><br><span class="line">            left++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (aux[left - start] &gt; aux[right - start]) &#123;</span><br><span class="line">            array[k] = aux[right - start];</span><br><span class="line">            right++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            array[k] = aux[left - start];</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5、堆排序"><a href="#5、堆排序" class="headerlink" title="5、堆排序"></a>5、堆排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">  原理：堆排序就是利用堆进行排序的方法.基本思想是:将待排序的序列构造成一个大顶堆.此时,整个序列的最大值就是堆顶的根结点.将它移走(其实就是将其与堆数组的末尾元素交换,此时末尾元素就是最大值),然后将剩余的n-1个序列重新构造成一个堆,这样就会得到n个元素的次大值.如此反复执行,便能得到一个有序序列了。</span><br><span class="line">  步骤：5.1 构造最大堆（Build_Max_Heap）：若数组下标范围为0~n，考虑到单独一个元素是大根堆，则从下标n/2开始的元素均为大根堆。于是只要从n/2-1开始，向前依次构造大根堆，这样就能保证，构造到某个节点时，它的左右子树都已经是大根堆。5.2 堆排序（HeapSort）：由于堆是用数组模拟的。得到一个大根堆后，数组内部并不是有序的。因此需要将堆化数组有序化。思想是移除根节点，并做最大堆调整的递归运算。第一次将heap[0]与heap[n-1]交换，再对heap[0...n-2]做最大堆调整。第二次将heap[0]与heap[n-2]交换，再对heap[0...n-3]做最大堆调整。重复该操作直至heap[0]和heap[1]交换。由于每次都是将最大的数并入到后面的有序区间，故操作完后整个数组就是有序的了。</span><br><span class="line">  5.3 最大堆调整（Max_Heapify）：该方法是提供给上述两个过程调用的。目的是将堆的末端子节点作调整，使得子节点永远小于父节点 。</span><br><span class="line">public int[] sort(int[] arr) &#123;</span><br><span class="line">    int len = arr.length - 1;</span><br><span class="line">    <span class="keyword">for</span> (int i = len / 2 - 1; i &gt;= 0; i--) &#123;</span><br><span class="line">        headAdjust(arr, i, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (len &gt;= 0) &#123;</span><br><span class="line">        SortUtil.swap(arr, 0, len--);</span><br><span class="line">        headAdjust(arr, 0, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">private void headAdjust(int[] arr, int parent, int len) &#123;</span><br><span class="line">    int leftChild, rightChild, maxChild;</span><br><span class="line">    <span class="keyword">while</span> ((leftChild = 2 * parent + 1) &lt;= len) &#123;</span><br><span class="line">        rightChild = leftChild + 1;</span><br><span class="line">        maxChild = leftChild;</span><br><span class="line">        // 将maxChild指向左右子节点中的较大者</span><br><span class="line">        <span class="keyword">if</span> (maxChild &lt; len &amp;&amp; (arr[leftChild] &lt; arr[rightChild])) &#123;</span><br><span class="line">            maxChild++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (arr[parent] &lt; arr[maxChild]) &#123;</span><br><span class="line">            SortUtil.swap(arr, parent, maxChild);</span><br><span class="line">            parent = maxChild;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 原理：先将整个待排元素序列分割成若干子序列（由相隔某个“增量”的元素组成的）分别进行直接插入排序，然后依次缩减增量再进行排序，待整个序列中的元素基本有序（增量足够小）时，再对全体元素进行一次直接插入排序（增量为1）。其时间复杂度为O( n^3/2 ),要好于直接插入排序的O(n^2)</span><br><span class="line"></span><br><span class="line">int gap = arr.length / 2;</span><br><span class="line"><span class="keyword">while</span> (gap &gt;= 1) &#123;</span><br><span class="line">    <span class="keyword">for</span> (int i = gap; i &lt; arr.length; i++) &#123;</span><br><span class="line">        int temp = arr[i];</span><br><span class="line">        int j = i - gap;</span><br><span class="line">        <span class="keyword">while</span> (j &gt;= 0 &amp;&amp; arr[j] &gt; temp) &#123;</span><br><span class="line">            arr[j + gap] = arr[j];</span><br><span class="line">            j -= gap;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[j + gap] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    gap /= 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="7、快速排序"><a href="#7、快速排序" class="headerlink" title="7、快速排序"></a>7、快速排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">    原理：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。</span><br><span class="line">    步骤：7.1 从数列中挑出一个元素作为基准数。</span><br><span class="line">	      7.2 分区过程，将比基准数大的放到右边，小于或等于它的数都放到左边。</span><br><span class="line">	      7.3 再对左右区间递归执行第二步，直至各区间只有一个数。</span><br><span class="line">private void quickSort(int[] arr, int left, int right) &#123;</span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right) <span class="built_in">return</span>;</span><br><span class="line">    int i = left, j = right, temp = arr[left];</span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[j] &gt;= temp) &#123;</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[i] &lt;= temp) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; j) &#123;</span><br><span class="line">            SortUtil.swap(arr, i, j);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    arr[left] = arr[i];</span><br><span class="line">    arr[i] = temp;</span><br><span class="line">    quickSort(arr, left, i - 1);</span><br><span class="line">    quickSort(arr, i + 1, right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你的爱，我会继续加油的！！！<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/assets/imgs/alipay.jpg">
-                      <span class="reward-type">支付宝</span>
-                    </div>
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/assets/imgs/weixin.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -244,130 +176,22 @@
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2017/12/10/px/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/04/24/gitStyle/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          git提交基本命令
-        
-      </div>
-    </a>
   
   
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-  
-  
+    </div></section>
   
 
-  
-  <section id="comments">
-<!--高速版，加载速度快，使用前需测试页面的兼容性-->
-<div id="SOHUCS" sid="七种基本排序算法的实现和总结"  style="padding: 0px 30px 0px 46px;"></div>
-<script>
-  (function(){
-    var appid = 'cytBitWYk',
-    conf = 'prod_a685df54e7e03715d3c4b607cc00db0f';
-    var doc = document,
-    s = doc.createElement('script'),
-    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
-    s.type = 'text/javascript';
-    s.charset = 'utf-8';
-    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
-    h.insertBefore(s,h.firstChild);
-    window.SCS_NO_IFRAME = true;
-  })()
-</script>    
-  </section>
-  
-
-  
-
+    
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/archives/page/4/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span>
+    </nav>
   
 
 
@@ -391,8 +215,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
