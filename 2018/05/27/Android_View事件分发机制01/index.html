@@ -17,7 +17,7 @@
 <meta property="og:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/assets/distribution_mechanism_img/Activity事件分发机制.png">
-<meta property="og:updated_time" content="2018-05-27T10:36:16.767Z">
+<meta property="og:updated_time" content="2018-05-31T04:51:07.285Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View事件分发机制01">
 <meta name="twitter:description" content="前言 从Activity开始分发 当用户触摸屏幕时（View 或 ViewGroup派生的控件），将产生点击事件（Touch事件）  Touch事件的相关细节（发生触摸的位置、时间等）被封装成MotionEvent对象    事件类型(4种)      事件类型 具体动作     MotionEvent.ACTION_DOWN 按下View（所有事件的开始)   MotionEvent.ACTIO">
@@ -240,10 +240,13 @@
 <h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><a id="more"></a>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Activity 源码分析</span><br><span class="line">/**</span><br><span class="line">     * Called to process touch screen events.  You can override this to</span><br><span class="line">     * intercept all touch screen events before they are dispatched to the</span><br><span class="line">     * window.  Be sure to call this implementation <span class="keyword">for</span> touch screen events</span><br><span class="line">     * that should be handled normally.</span><br><span class="line">     *</span><br><span class="line">     * @param ev The touch screen event.</span><br><span class="line">     *</span><br><span class="line">     * @<span class="built_in">return</span> boolean Return <span class="literal">true</span> <span class="keyword">if</span> this event was consumed.</span><br><span class="line">     */</span><br><span class="line">    public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">        // 一般事件列开始都是DOWN事件 = 按下事件，故此处基本是<span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            onUserInteraction();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">            <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">                // 若getWindow().superDispatchTouchEvent(ev)的返回<span class="literal">true</span></span><br><span class="line">                // 则Activity.dispatchTouchEvent（）就返回<span class="literal">true</span>，则方法结束。即 ：该点击事件停止往下传递 &amp; 事件传递过程结束</span><br><span class="line">                // 否则：继续往下调用Activity.onTouchEvent</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">return</span> onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * 分析1：onUserInteraction()</span><br><span class="line">  * 作用：实现屏保功能</span><br><span class="line">  * 注：</span><br><span class="line">  *    a. 该方法为空方法</span><br><span class="line">  *    b. 当此activity在栈顶时，触屏点击按home，back，menu键等都会触发此方法</span><br><span class="line">  */</span><br><span class="line">      public void <span class="function"><span class="title">onUserInteraction</span></span>() &#123; </span><br><span class="line"></span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="接着我们继续看-superDispatchTouchEvent-ev-方法"><a href="#接着我们继续看-superDispatchTouchEvent-ev-方法" class="headerlink" title="接着我们继续看 superDispatchTouchEvent(ev) 方法"></a>接着我们继续看 superDispatchTouchEvent(ev) 方法</h3><blockquote>
-<p>这里我在说下窗口机制:主要是由Activity—&gt;PhoneWindow—&gt;DecorView—&gt;ContentView，也就是PhoneWindow通过继承Window抽象类,然后触发这个方法，接着调用DecorView方法,将当前手势传下去，因为DecorView是继承FrameLayout。由于FrameLayout的父类是ViewGroup，DecorView间接=ViewGroup(下一章节会说到),放松一下,图片走起,哈哈哈</p>
+<p>这里我在说下窗口机制:主要是由Activity—&gt;PhoneWindow—&gt;DecorView—&gt;ContentView，也就是PhoneWindow通过继承Window抽象类,然后触发这个方法，接着调用DecorView方法,将当前手势传下去，因为DecorView是继承FrameLayout。由于FrameLayout的父类是ViewGroup，DecorView间接=ViewGroup(下一章节会说到)</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * 分析2：getWindow().superDispatchTouchEvent(ev)</span><br><span class="line">  * 说明：</span><br><span class="line">  *     a. getWindow() = 获取Window类的对象</span><br><span class="line">  *     b. Window类是抽象类，其唯一实现类 = PhoneWindow类；即此处的Window类对象 = PhoneWindow类对象</span><br><span class="line">  *     c. Window类的superDispatchTouchEvent() = 1个抽象方法，由子类PhoneWindow类实现</span><br><span class="line">  */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">return</span> mDecor.superDispatchTouchEvent(event);</span><br><span class="line">        // mDecor = 顶层View（DecorView）的实例对象</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="/assets/distribution_mechanism_img/Activity事件分发机制.png" alt=""></p>
+<ul>
+<li>放松一下,图片走起,哈哈哈 。下章节继续讲解ViewGroup事件分发机制</li>
+</ul>
 <iframe height="300" width="300" src="http://wangshuipo.top/assets/imgs/zhuangbi01.gif">
 
 </iframe>
@@ -514,10 +517,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制02</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
               </li>
              
@@ -531,6 +530,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">retrofit源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制02</a>
               </li>
             
             <div class="clearfix"></div>
