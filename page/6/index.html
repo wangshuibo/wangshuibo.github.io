@@ -137,20 +137,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-px" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-gitStyle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/10/px/">七种基本排序算法的实现和总结</a>
+      <a class="article-title" href="/2018/04/24/gitStyle/">git提交基本命令</a>
     </h1>
   
 
         
-        <a href="/2017/12/10/px/" class="archive-article-date">
-  	<time datetime="2017-12-10T08:33:18.179Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-10</time>
+        <a href="/2018/04/24/gitStyle/" class="archive-article-date">
+  	<time datetime="2018-04-24T08:03:56.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-24</time>
 </a>
         
       </header>
@@ -160,14 +160,87 @@
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1、冒泡排序"><a href="#1、冒泡排序" class="headerlink" title="1、冒泡排序"></a>1、冒泡排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 原理：每次比较两个相邻的元素，如果它们的顺序错误就把它们交换过来。</span><br><span class="line"> 步骤：1.1 比较相邻的元素。如果倒数第一个比倒数第二个小，就交换他们两个。</span><br><span class="line">       1.2 对第0个到第n-1个数据做同样的工作。这时，最小的数就“浮”到了数组最开始的位置上。</span><br><span class="line">       1.3 针对所有的元素重复以上的步骤，除了第一个。</span><br><span class="line">       1.4 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。</span><br><span class="line"><span class="keyword">for</span> (int i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (int j = arr.length  - 1; j &gt; i; j--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt; arr[j - 1]) &#123;</span><br><span class="line">            SortUtil.swap(arr, j, j - 1);</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2、选择排序"><a href="#2、选择排序" class="headerlink" title="2、选择排序"></a>2、选择排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  原理：不断地选择剩余元素中的最小者</span><br><span class="line">  步骤：2.1 找到数组中最小元素的下标，将第一个元素与最小元素下标的数进行交换。</span><br><span class="line">	    2.2 在剩下的元素中找到最小元素下标并将其与数组第二个元素交换，直至整个数组排序。</span><br><span class="line"><span class="keyword">for</span> (int i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">    int minIndex = i;</span><br><span class="line">    <span class="keyword">for</span> (int j = i + 1; j &lt; arr.length; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt; arr[minIndex]) &#123;</span><br><span class="line">            minIndex = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SortUtil.swap(arr, minIndex, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3、插入排序"><a href="#3、插入排序" class="headerlink" title="3、插入排序"></a>3、插入排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 原理：插入排序的工作原理是，对于每个未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</span><br><span class="line"> 步骤：3.1 从第一个元素开始，该元素可以认为已经被排序</span><br><span class="line">	   3.2 取出下一个元素，在已经排序的元素序列中从后向前扫描</span><br><span class="line">	   3.3 如果被扫描的元素（已排序）大于新元素，将该元素后移一位</span><br><span class="line">	   3.4 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置</span><br><span class="line">	   3.5 将新元素插入到该位置后</span><br><span class="line">	   3.6 重复步骤2~5</span><br><span class="line"><span class="keyword">for</span> (int i = 1; i &lt; arr.length; i++) &#123;</span><br><span class="line">    int temp = arr[i];</span><br><span class="line">    int j;</span><br><span class="line">    <span class="keyword">for</span> (j = i; j &gt; 0 &amp;&amp; (arr[j - 1] &gt; temp); j--) &#123;</span><br><span class="line">        arr[j] = arr[j -1];</span><br><span class="line">    &#125;</span><br><span class="line">    arr[j] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="4、归并排序"><a href="#4、归并排序" class="headerlink" title="4、归并排序"></a>4、归并排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> 原理：将长度为n的记录不断划分，划分到长度为1时，再两两合并，依次递归。主要是利用分治法来处理。</span><br><span class="line">@Override</span><br><span class="line">public int[] sort(int[] arr) &#123;</span><br><span class="line">    mergeSort(arr, 0, arr.length - 1);</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">private void mergeSort(int[] array, int start, int end) &#123;</span><br><span class="line">    <span class="keyword">if</span> (start &gt;= end) <span class="built_in">return</span>;</span><br><span class="line">    int middle = (start + end) / 2;</span><br><span class="line">    mergeSort(array, start, middle);</span><br><span class="line">    mergeSort(array, middle + 1, end);</span><br><span class="line">    merge(array, start, middle, end);</span><br><span class="line">&#125;</span><br><span class="line">private void merge(int[] array, int start, int middle, int end) &#123;</span><br><span class="line">    int[] aux = new int[end - start + 1];</span><br><span class="line">    System.arraycopy(array, start, aux, 0, end - start + 1);</span><br><span class="line">    int left = start;</span><br><span class="line">    int right = middle + 1;</span><br><span class="line">    <span class="keyword">for</span> (int k = start; k &lt;= end; k++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left &gt; middle) &#123;</span><br><span class="line">            array[k] = aux[right - start];</span><br><span class="line">            right++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (right &gt; end) &#123;</span><br><span class="line">            array[k] = aux[left - start];</span><br><span class="line">            left++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (aux[left - start] &gt; aux[right - start]) &#123;</span><br><span class="line">            array[k] = aux[right - start];</span><br><span class="line">            right++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            array[k] = aux[left - start];</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5、堆排序"><a href="#5、堆排序" class="headerlink" title="5、堆排序"></a>5、堆排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">  原理：堆排序就是利用堆进行排序的方法.基本思想是:将待排序的序列构造成一个大顶堆.此时,整个序列的最大值就是堆顶的根结点.将它移走(其实就是将其与堆数组的末尾元素交换,此时末尾元素就是最大值),然后将剩余的n-1个序列重新构造成一个堆,这样就会得到n个元素的次大值.如此反复执行,便能得到一个有序序列了。</span><br><span class="line">  步骤：5.1 构造最大堆（Build_Max_Heap）：若数组下标范围为0~n，考虑到单独一个元素是大根堆，则从下标n/2开始的元素均为大根堆。于是只要从n/2-1开始，向前依次构造大根堆，这样就能保证，构造到某个节点时，它的左右子树都已经是大根堆。5.2 堆排序（HeapSort）：由于堆是用数组模拟的。得到一个大根堆后，数组内部并不是有序的。因此需要将堆化数组有序化。思想是移除根节点，并做最大堆调整的递归运算。第一次将heap[0]与heap[n-1]交换，再对heap[0...n-2]做最大堆调整。第二次将heap[0]与heap[n-2]交换，再对heap[0...n-3]做最大堆调整。重复该操作直至heap[0]和heap[1]交换。由于每次都是将最大的数并入到后面的有序区间，故操作完后整个数组就是有序的了。</span><br><span class="line">  5.3 最大堆调整（Max_Heapify）：该方法是提供给上述两个过程调用的。目的是将堆的末端子节点作调整，使得子节点永远小于父节点 。</span><br><span class="line">public int[] sort(int[] arr) &#123;</span><br><span class="line">    int len = arr.length - 1;</span><br><span class="line">    <span class="keyword">for</span> (int i = len / 2 - 1; i &gt;= 0; i--) &#123;</span><br><span class="line">        headAdjust(arr, i, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (len &gt;= 0) &#123;</span><br><span class="line">        SortUtil.swap(arr, 0, len--);</span><br><span class="line">        headAdjust(arr, 0, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">private void headAdjust(int[] arr, int parent, int len) &#123;</span><br><span class="line">    int leftChild, rightChild, maxChild;</span><br><span class="line">    <span class="keyword">while</span> ((leftChild = 2 * parent + 1) &lt;= len) &#123;</span><br><span class="line">        rightChild = leftChild + 1;</span><br><span class="line">        maxChild = leftChild;</span><br><span class="line">        // 将maxChild指向左右子节点中的较大者</span><br><span class="line">        <span class="keyword">if</span> (maxChild &lt; len &amp;&amp; (arr[leftChild] &lt; arr[rightChild])) &#123;</span><br><span class="line">            maxChild++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (arr[parent] &lt; arr[maxChild]) &#123;</span><br><span class="line">            SortUtil.swap(arr, parent, maxChild);</span><br><span class="line">            parent = maxChild;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="6、希尔排序"><a href="#6、希尔排序" class="headerlink" title="6、希尔排序"></a>6、希尔排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 原理：先将整个待排元素序列分割成若干子序列（由相隔某个“增量”的元素组成的）分别进行直接插入排序，然后依次缩减增量再进行排序，待整个序列中的元素基本有序（增量足够小）时，再对全体元素进行一次直接插入排序（增量为1）。其时间复杂度为O( n^3/2 ),要好于直接插入排序的O(n^2)</span><br><span class="line"></span><br><span class="line">int gap = arr.length / 2;</span><br><span class="line"><span class="keyword">while</span> (gap &gt;= 1) &#123;</span><br><span class="line">    <span class="keyword">for</span> (int i = gap; i &lt; arr.length; i++) &#123;</span><br><span class="line">        int temp = arr[i];</span><br><span class="line">        int j = i - gap;</span><br><span class="line">        <span class="keyword">while</span> (j &gt;= 0 &amp;&amp; arr[j] &gt; temp) &#123;</span><br><span class="line">            arr[j + gap] = arr[j];</span><br><span class="line">            j -= gap;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[j + gap] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    gap /= 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="7、快速排序"><a href="#7、快速排序" class="headerlink" title="7、快速排序"></a>7、快速排序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">    原理：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。</span><br><span class="line">    步骤：7.1 从数列中挑出一个元素作为基准数。</span><br><span class="line">	      7.2 分区过程，将比基准数大的放到右边，小于或等于它的数都放到左边。</span><br><span class="line">	      7.3 再对左右区间递归执行第二步，直至各区间只有一个数。</span><br><span class="line">private void quickSort(int[] arr, int left, int right) &#123;</span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right) <span class="built_in">return</span>;</span><br><span class="line">    int i = left, j = right, temp = arr[left];</span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[j] &gt;= temp) &#123;</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[i] &lt;= temp) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; j) &#123;</span><br><span class="line">            SortUtil.swap(arr, i, j);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    arr[left] = arr[i];</span><br><span class="line">    arr[i] = temp;</span><br><span class="line">    quickSort(arr, left, i - 1);</span><br><span class="line">    quickSort(arr, i + 1, right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令:"></a>基本命令:</h2><pre><code>1.ls -a 表示使用lunix命令查看文件夹下的文件。
+2.git init 表示初始化一个空的git仓库。
+3.git status 表示默认生成的仓库里该文件夹里面的文件没有追踪，这个命令可以查看当前状态。
+4.git add 文件名 表示添加到暂存区，追踪。
+5.git commit -m &apos;可以添加描述&apos; 表示提交文件。
+6.git log 表示查看提交信息。
+7.git add . 表示可以添加全部文件。
+8.git commit -am &apos;可以添加描述&apos; 表示添加并提交文件。
+9.git log --oneline 表示只查看描述信息。
+</code></pre><h2 id="git的三层结构"><a href="#git的三层结构" class="headerlink" title="git的三层结构"></a>git的三层结构</h2><pre><code>1.working directory 工作区
+2.staging index 暂存区
+3.git directory(Repository)版本库
+</code></pre><h2 id="git中文件四种状态"><a href="#git中文件四种状态" class="headerlink" title="git中文件四种状态"></a>git中文件四种状态</h2><pre><code>1.untracked:未追踪  
+2.Modified:表示工作区修改了某个文件但是还没有添加到暂存区
+3.Stage:表示把工作区修改的文件添加到暂存区但是没有提交到版本库
+4.Committed:表示数据被安全的存储在本地仓库中
+</code></pre><h2 id="git撤销操作"><a href="#git撤销操作" class="headerlink" title="git撤销操作"></a>git撤销操作</h2><pre><code>1.git commit --amend 撤销上一次提交，并将暂存区的文件重新提交。(注意跳出是先按Esc，然后输入输入:wq再按Enter键)
+2.git checkout -- filename 拉取暂存区的文件并将其替换工作区的文件，注意与git checkout branchname区别
+3.git reset HEAD -- filename 拉取最近一次提交的版本库中的这个文件到暂存区，该操作不影响工作区。(可以在git log 中选择其中的一个版本号替换HEAD,这么做可以拉回上一次提交的样式。具体写法git reset 选择想要替换回来的一次版本号 filename )
+4.git reset --options 版本号{options可以替换--hard
+                                            --mixed
+                                            --soft
+                             }
+</code></pre><h2 id="git文件删除"><a href="#git文件删除" class="headerlink" title="git文件删除"></a>git文件删除</h2><pre><code>1.git rm --filename {1.删除工作区及暂存区中的改文件相当于删除文件后执行 git add
+                     2.git rm --cached filename 在不小心将不需要追踪的文件添加到暂存区，想要删除暂存的文件但不想删除工作区的文件很有用(应用场景.gitignore.git远程仓库)
+                     3.git rm -f filename 当工作区或者暂存区文件修改了(防止把修改误删除了)
+                     4.glob模式--星号(*)匹配零个或多个任意字符
+                               --[abc] 匹配任何一个列在方括号中的字符--问号(?)只匹配一个任意字符
+                               --[0-9]、[a-z]匹配范围
+                    }
+2.git mv --filename 相当于 {1.mv oldname newname
+                            2.git rm oldname
+                            3.git add newname 
+                            }
+</code></pre><h2 id="git分支"><a href="#git分支" class="headerlink" title="git分支"></a>git分支</h2><pre><code>1.git 分支的创建、修改、切换、删除{1.git branch 查看分支
+                              2.git branch branchname创建分支
+                              3.git branch -m oldname newname 修改分支名称
+                              4.git checkout [-b] branchname 如果加上-b命令的意思是创建该分支并且切换分支,反之只是切换分支
+                              5.git branch -D  branchname删除分支
+                              }
 
+
+2. git 分支合并    
+        2-1.分值的指南--HEAD指向当前工作的分支--再切换分支时指向新的分支
+        2-2.git diff{1.git diff 比较工作区与暂存区文件的差异
+                     2.git diff --staged 比较暂存区与版本库的文件差异
+                     3.git diff 版本号 版本号 比较分支内两个版本的差异
+                     4.git diff 分支 分支 比较两个分支的最新提交版本的差异
+                    }
+        2-3.git merge branchname 合并之前需要先切换到master分支--快速合并和冲突合并
+3.存储变更
+        3-1.git stash
+        3-2.git stash list
+        3-3.git stash apply stash@num    git stash apply 后面不加名字则应用最近一次存储信息
+        3-4.git stash drop stash@num     git stash apply 只是运用存储信息，并不删除他，drop命令可以删除它
+</code></pre><h2 id="git-远程仓库"><a href="#git-远程仓库" class="headerlink" title="git 远程仓库"></a>git 远程仓库</h2><pre><code>1.github上的仓库{1.创建仓库
+                 2.clone仓库到本地
+                 3.本地push到仓库
+                 4.pull代码到本地
+                 5.ignoring files
+                 }   
+2.远程服务器上的仓库{1.用taskmanager来演示
+                     2.git init --bare
+                     3.git remote add name path
+                     4.git remote rm name
+                     5.git remote  rename oldname newname
+                     6.git fetch
+                    }   
+
+3.Git ssh免密登录{1.首先要配置username和邮箱 git config --global user.name yinlijun   git config user.email aaa@aaa.com如果配置了就不要配置
+                   ssh-keygen -t rsa -C &quot;youremail@example.com&quot;
+                  2.ssh-copy-id user@host 将本机的公钥复制到远程服务器的authorized_keys文件中
+                  3.如果不是自己的服务器可以将本地公钥发给服务器管理员添加在authorized_keys文件后面
+                  4.
+                 }
+</code></pre><h2 id="Git帮助文档的使用"><a href="#Git帮助文档的使用" class="headerlink" title="Git帮助文档的使用"></a>Git帮助文档的使用</h2><pre><code>1.git help 
+2.git help command 
+3.官方地址---http://git-scm.com/docs
+
+http://www.wangshuibo.github.io
+</code></pre>
       
 
       
@@ -180,7 +253,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">排序</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">git命令</a>
         		</li>
       		
 		</ul>
@@ -190,7 +263,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/10/px/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/04/24/gitStyle/">展开全文 >></a>
         </p>
       
 
@@ -222,7 +295,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 
@@ -317,11 +390,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制03</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制03</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -330,6 +403,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Android P刘海屏适配大全</a>
               </li>
              
               <li class="article-tag-list-item">

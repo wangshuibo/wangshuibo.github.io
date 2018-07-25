@@ -137,20 +137,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Android-View事件分发机制03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-看过来Android P刘海屏适配大全" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/31/Android-View事件分发机制03/">Android_View事件分发机制03</a>
+      <a class="article-title" href="/2018/07/25/看过来Android P刘海屏适配大全/">看过来Android P刘海屏适配大全</a>
     </h1>
   
 
         
-        <a href="/2018/05/31/Android-View事件分发机制03/" class="archive-article-date">
-  	<time datetime="2018-05-31T05:27:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-31</time>
+        <a href="/2018/07/25/看过来Android P刘海屏适配大全/" class="archive-article-date">
+  	<time datetime="2018-07-25T12:37:18.404Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-25</time>
 </a>
         
       </header>
@@ -160,13 +160,65 @@
 <!-- 目录内容结束 -->
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
-<li>从上一章节(ViewGroup事件分发机制可知道)，View事件分发机制从dispatchTouchEvent()开始。</li>
-</ul>
-<h3 id="我们直接上源码"><a href="#我们直接上源码" class="headerlink" title="我们直接上源码"></a>我们直接上源码</h3>
-        
-          <a class="article-more-a" href="/2018/05/31/Android-View事件分发机制03/#more">more >></a>
-        
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>随着 Apple 发布 iPhone X 之后，各大手机厂商也开始模仿这种刘海屏的设计，而且刘海屏手机的用户也是越来越多，前段时间将项目进行了所有主流厂商的刘海屏手机的适配，以便让刘海屏手机的用户也能有更好的体验。在我看来，引领新的技术是OK的，但是跟班别人我就看不惯了。</p>
+</blockquote>
+<h3 id="一、刘海屏造成UI显示问题"><a href="#一、刘海屏造成UI显示问题" class="headerlink" title="一、刘海屏造成UI显示问题"></a>一、刘海屏造成UI显示问题</h3><blockquote>
+<p>刘海屏手机因为比平常的手机多了一块顶部的遮挡性刘海，所以会造成顶部 Toolbar 以及搜索框的遮挡，而且有些厂商的手机（vivo、华为），默认是在「无状态栏」的界面将状态栏进行黑化显示，这时候会导致系统下移，从而导致底部的一些 UI 被截断。</p>
+</blockquote>
+<h3 id="二、通用适配方案"><a href="#二、通用适配方案" class="headerlink" title="二、通用适配方案"></a>二、通用适配方案</h3><blockquote>
+<p>理论上来讲，通过 Android P 版本提供的刘海屏相关接口，判断手机是否为刘海屏手机，以及进行一些相应的处理是最合适的方式，但现在使用在国内使用 Android P 的接口是不现实的，所以只能通过各大厂商提供的技术文档来进行适配，但适配的流程基本是一致的。</p>
+</blockquote>
+<h4 id="2-1应用是否已经适配刘海屏"><a href="#2-1应用是否已经适配刘海屏" class="headerlink" title="2.1应用是否已经适配刘海屏"></a>2.1应用是否已经适配刘海屏</h4><blockquote>
+<p>当不显示状态栏时，直接将界面进行显示，「状态栏原先的位置也用于显示界面」，例如：OPPO<br>当不显示状态栏时，直接「将状态栏原先的位置进行黑化，界面整体下移」，不去适配，感觉一团黑，不好看呐。例如：华为、vivo</p>
+<blockquote>
+<p>所以，我们在进行刘海屏适配的时候，首先需要通过一些手段，统一各大厂商的显示方案，让所有的刘海屏手机都利用状态栏的界面，「告知系统」我们已经适配了刘海屏，确保系统不会下移我们的应用，保留原生体验。</p>
+</blockquote>
+</blockquote>
+<h5 id="2-1-1这里主要有两种方式"><a href="#2-1-1这里主要有两种方式" class="headerlink" title="2.1.1这里主要有两种方式"></a>2.1.1这里主要有两种方式</h5><h6>1、设置屏幕高宽比例</h6>
+
+<blockquote>
+<p>因为刘海屏手机的「宽高比」比之前的手机大，如果不适配的话，Android 默认为最大的宽高比为 1.86，<br>小于刘海屏手机的宽高比，因此我们需要申明更高的宽高比来告诉系统，我们应用已经适配了刘海屏。<br>只要在 AndroidManifest.xml 中加入如下配置：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta-data android:name=&quot;android.max_aspect&quot;  android:value=&quot;2.1&quot;/&gt;</span><br><span class="line">也可以在 Application 添加属性：</span><br><span class="line">android:maxAspectRatio=&quot;ratio_float&quot;</span><br><span class="line">ps：这个属性需要 API 26 才支持</span><br></pre></td></tr></table></figure>
+<h6>2、设置应用支持 resize</h6>
+
+<blockquote>
+<p>我们还可以通过设置应用支持 resizeable，来告诉系统我们适配了刘海屏，而且这也是 Google 官方推荐的方式。不过需要注意的是，使用这个属性之后，应用也会跟着支持分屏模式。只需要在 AndroidManifest.xml 中添加：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:resizeableActivity=&quot;true&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-页面是否显示状态栏"><a href="#2-2-页面是否显示状态栏" class="headerlink" title="2.2 页面是否显示状态栏"></a>2.2 页面是否显示状态栏</h4><blockquote>
+<p>对于刘海屏适配，我们将界面分为两种：<br>对于有状态栏的界面，不会受到刘海屏的影响<br>全屏显示的界面（无状态栏），需要根据界面的显示进行一些控件的下移<br>因此，我们进行刘海屏适配，其实针对的就是没有状态栏的界面，而有状态栏的界面显示是正常的。对于没有状态栏的界面，主要是将对被刘海遮挡到的控件，设置对应刘海高度的 MarginTop，从而避免控件被遮挡。</p>
+</blockquote>
+<h3 id="三、各大厂商适配方案"><a href="#三、各大厂商适配方案" class="headerlink" title="三、各大厂商适配方案"></a>三、各大厂商适配方案</h3><blockquote>
+<p>现在 Android P 的接口还没法用，但各手机厂商都制定了自己的 API，对此我们需要对各大机型进行特殊的适配，这里主要介绍 vivo、OPPO、华为 这三种主流手机的适配方案。</p>
+</blockquote>
+<h4 id="3-1华为"><a href="#3-1华为" class="headerlink" title="3.1华为"></a>3.1华为</h4><blockquote>
+<p>华为作为国内的手机厂商大头，自己仿照 Android P 提供的 API，实现了一套几乎差不多的 API，所以我们如果想要告诉系统我们的应用适配了刘海屏，最好直接使用华为的 API，这样才是最保险的。<br>以下代码来自：华为刘海屏适配官方技术指导<br><a href="https://mini.eastday.com/bdmip/180411011257629.html" target="_blank" rel="noopener">链接</a></p>
+</blockquote>
+<h5 id="3-1-1、应用页面设置使用刘海区显示"><a href="#3-1-1、应用页面设置使用刘海区显示" class="headerlink" title="3.1.1、应用页面设置使用刘海区显示"></a>3.1.1、应用页面设置使用刘海区显示</h5><blockquote>
+<p>① 方案一：在 AndroidManifest.xml 中增加 meta-data 属性，此属性不仅可以针对 Application 生效，也可以对 Activity 配置生效：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta-data android:name=&quot;android.notch_support&quot; android:value=&quot;true&quot;/&gt;</span><br><span class="line">增加这个属性之后，系统就会对应用进行下移处理，从而保证原生体验。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>② 方案二：通过添加窗口 FLAG 的方式设置界面使用刘海区：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public static void setFullScreenWindowLayoutInDisplayCutout(Window window) &#123;</span><br><span class="line">    if (window == null) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    WindowManager.LayoutParams layoutParams = window.getAttributes();</span><br><span class="line">    try &#123;</span><br><span class="line">        Class layoutParamsExCls = Class.forName(&quot;com.huawei.android.view.LayoutParamsEx&quot;);</span><br><span class="line">        Constructor con=layoutParamsExCls.getConstructor(LayoutParams.class);</span><br><span class="line">        Object layoutParamsExObj=con.newInstance(layoutParams);</span><br><span class="line">        Method method=layoutParamsExCls.getMethod(&quot;addHwFlags&quot;, int.class);</span><br><span class="line">        method.invoke(layoutParamsExObj, FLAG_NOTCH_SUPPORT);</span><br><span class="line">    &#125; catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InstantiationException  | InvocationTargetException e) &#123;</span><br><span class="line">        Log.e(&quot;test&quot;, &quot;hw add notch screen flag api error&quot;);</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        Log.e(&quot;test&quot;, &quot;other Exception&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-1-2、判断该华为手机是否刘海屏"><a href="#3-1-2、判断该华为手机是否刘海屏" class="headerlink" title="3.1.2、判断该华为手机是否刘海屏"></a>3.1.2、判断该华为手机是否刘海屏</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public static boolean hasNotchInHuawei(Context context) &#123;</span><br><span class="line">    boolean hasNotch = false;</span><br><span class="line">    try &#123;</span><br><span class="line">        ClassLoader cl = context.getClassLoader();</span><br><span class="line">        Class HwNotchSizeUtil = cl.loadClass(&quot;com.huawei.android.util.HwNotchSizeUtil&quot;);</span><br><span class="line">        Method hasNotchInScreen = HwNotchSizeUtil.getMethod(&quot;hasNotchInScreen&quot;);</span><br><span class="line">        if(hasNotchInScreen != null) &#123;</span><br><span class="line">            hasNotch = (boolean) hasNotchInScreen.invoke(HwNotchSizeUtil);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return hasNotch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-1-3、获取刘海的高度"><a href="#3-1-3、获取刘海的高度" class="headerlink" title="3.1.3、获取刘海的高度"></a>3.1.3、获取刘海的高度</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public static int[] getNotchSize(Context context) &#123;</span><br><span class="line">    int[] ret = new int[]&#123;0, 0&#125;;</span><br><span class="line">    try &#123;</span><br><span class="line">        ClassLoader cl = context.getClassLoader();</span><br><span class="line">        Class HwNotchSizeUtil = cl.loadClass(&quot;com.huawei.android.util.HwNotchSizeUtil&quot;);</span><br><span class="line">        Method get = HwNotchSizeUtil.getMethod(&quot;getNotchSize&quot;);</span><br><span class="line">        ret = (int[]) get.invoke(HwNotchSizeUtil);</span><br><span class="line">    &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">        Log.e(&quot;test&quot;, &quot;getNotchSize ClassNotFoundException&quot;);</span><br><span class="line">    &#125; catch (NoSuchMethodException e) &#123;</span><br><span class="line">        Log.e(&quot;test&quot;, &quot;getNotchSize NoSuchMethodException&quot;);</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        Log.e(&quot;test&quot;, &quot;getNotchSize Exception&quot;);</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-OPPO"><a href="#3-2-OPPO" class="headerlink" title="3.2 OPPO"></a>3.2 OPPO</h4><blockquote>
+<p>OPPO 是主流厂商中的一股清流，学 iPhoneX 是最像的，OPPO 手机对于不显示状态栏的界面，采取的是「状态栏原先的位置也用于显示界面」的方案，所以我们只要进行相关控件的位置移动就可以了。<br>以下代码来自： OPPO 凹形屏适配说明<br><a href="https://open.oppomobile.com/wiki/doc#id=10159" target="_blank" rel="noopener">链接</a></p>
+</blockquote>
+<h5 id="3-2-1、判断该-OPPO-手机是否为刘海屏手机"><a href="#3-2-1、判断该-OPPO-手机是否为刘海屏手机" class="headerlink" title="3.2.1、判断该 OPPO 手机是否为刘海屏手机"></a>3.2.1、判断该 OPPO 手机是否为刘海屏手机</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static boolean hasNotchInOppo(Context context) &#123;</span><br><span class="line">    return context.getPackageManager().hasSystemFeature(&quot;com.oppo.feature.screen.heteromorphism&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="3-2-2、获取刘海屏的高度"><a href="#3-2-2、获取刘海屏的高度" class="headerlink" title="3.2.2、获取刘海屏的高度"></a>3.2.2、获取刘海屏的高度</h5><blockquote>
+<p>对于 OPPO 刘海屏手机的刘海高度，OPPO 官方的文档没有提供相关的 API，但官方文档表示 OPPO 手机的刘海高度和状态栏的高度是一致的，而且我也对此进行了验证，确实如此。所以我们可以直接获取状态栏的高度，作为 OPPO 手机的刘海高度。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static int getStatusBarHeight(Context context) &#123;</span><br><span class="line">    int statusBarHeight = 0;</span><br><span class="line">    int resourceId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);</span><br><span class="line">    if (resourceId &gt; 0) &#123;</span><br><span class="line">        statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);</span><br><span class="line">    &#125;</span><br><span class="line">    return statusBarHeight ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-VIVO"><a href="#3-3-VIVO" class="headerlink" title="3.3 VIVO"></a>3.3 VIVO</h4><blockquote>
+<p>vivo 提供的技术文档对于开发者来说是最不友好的，只提供了一个 API 来进行刘海屏的判断，并没有提供刘海高度的获取方式，我们只能通过获取状态栏高度来当做刘海的高度，但在某些机型可能会有些偏差。<br>官方文档：vivo 手机适配指南<br><a href="https://dev.vivo.com.cn/doc/document/info?id=103" target="_blank" rel="noopener">链接</a></p>
+</blockquote>
+<h5 id="3-3-1-判断该-vivo-手机是否为刘海屏手机"><a href="#3-3-1-判断该-vivo-手机是否为刘海屏手机" class="headerlink" title="3.3.1 判断该 vivo 手机是否为刘海屏手机"></a>3.3.1 判断该 vivo 手机是否为刘海屏手机</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public static boolean hasNotchInVivo(Context context) &#123;</span><br><span class="line">    boolean hasNotch = false;</span><br><span class="line">    try &#123;</span><br><span class="line">        ClassLoader cl = context.getClassLoader();</span><br><span class="line">        Class ftFeature = cl.loadClass(&quot;android.util.FtFeature&quot;);</span><br><span class="line">        Method[] methods = ftFeature.getDeclaredMethods();</span><br><span class="line">        if (methods != null) &#123;</span><br><span class="line">            for (int i = 0; i &lt; methods.length; i++) &#123;</span><br><span class="line">                Method method = methods[i];</span><br><span class="line">                if(method != null) &#123;</span><br><span class="line">                    if (method.getName().equalsIgnoreCase(&quot;isFeatureSupport&quot;)) &#123;</span><br><span class="line">                        hasNotch = (boolean) method.invoke(ftFeature, 0x00000020);</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        hasNotch = false;</span><br><span class="line">    &#125;</span><br><span class="line">    return hasNotch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="四、"><a href="#四、" class="headerlink" title="四、"></a>四、</h3>
       
 
       
@@ -179,7 +231,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Android_View事件分发机制03</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Android P刘海屏适配大全</a>
         		</li>
       		
 		</ul>
@@ -189,7 +241,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/31/Android-View事件分发机制03/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/07/25/看过来Android P刘海屏适配大全/">展开全文 >></a>
         </p>
       
 
@@ -221,7 +273,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -316,11 +368,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制03</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android View事件分发机制01</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android_View事件分发机制03</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -329,6 +381,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Android P刘海屏适配大全</a>
               </li>
              
               <li class="article-tag-list-item">
